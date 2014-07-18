@@ -12,9 +12,9 @@
 
     <?php 
       echo $this->Html->css(array(
-        'new/bootstrap.min',
-        'new/miestilo',
-        'new/signin',
+        'bootstrap.min',
+        'miestilo',
+        'signin',
       ));
     ?>
 

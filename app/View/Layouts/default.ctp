@@ -15,10 +15,10 @@
 
     <?php 
       echo $this->Html->css(array(
-        'new/bootstrap.min',
-        'new/dashboard',
-        'new/carousel',
-        'new/miestilo',
+        'bootstrap.min',
+        'dashboard',
+        'carousel',
+        'miestilo',
       ));
     ?>
     <?= $this->Html->script(array(
