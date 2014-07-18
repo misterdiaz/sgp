@@ -1,0 +1,2 @@
+1484509938
+a:2:{s:11:"proyecto_id";a:4:{s:4:"type";s:7:"integer";s:4:"null";b:1;s:7:"default";s:0:"";s:6:"length";N;}s:8:"punto_id";a:4:{s:4:"type";s:7:"integer";s:4:"null";b:1;s:7:"default";s:0:"";s:6:"length";N;}}
