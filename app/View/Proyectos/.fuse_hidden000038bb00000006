@@ -1,0 +1,83 @@
+<?php
+$this->Html->addCrumb('Proyectos', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Agregar', array('controller'=>'Proyectos', 'action'=>'view'));
+?>
+<div class="proyectos form">
+<?php echo $this->Form->create('Proyecto'); ?>
+
+<h2>Creación nuevo proyecto</h2>
+	<?php
+		//echo $this->Form->label('Proyecto.name', 'Nombre del proyecto: ');
+		echo $this->Form->input('name', array('label'=>array('text'=>'Nombre del proyecto: ', 'class'=>'span-5 derecha'), 'class'=>'span-14 last', 'div'=>array('class'=>'span-24 last'),
+			'required'=>true
+		));
+		echo $this->Form->input('objetivoGeneral', array('label'=>array('text'=>'Objetivo general: ', 'class'=>'span-5 derecha'), 'class'=>'span-14 last', 'div'=>array('class'=>'span-24 last'),
+			'required'=>true
+		));
+		echo $this->Form->input('cliente', array('label'=>array('text'=>'Cliente: ', 'class'=>'span-5 derecha'), 'class'=>'span-14 last', 'div'=>array('class'=>'span-24 last'),
+			'required'=>true
+		));
+		echo $this->Form->input('fecha_inicio', array('label'=>array('text'=>'Fecha de inicio: ', 'class'=>'span-5 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-10'), 
+			'readonly'=>true, 'required'=>true, 
+		));
+		echo $this->Form->input('fecha_culminacion', array('label'=>array('text'=>'Fecha de culminación: ', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-10'), 
+			'readonly'=>true, 'required'=>true,
+		));
+		echo $this->Form->input('coordinadorName', array('label'=>array('text'=>'Coordinador: ', 'class'=>'span-5 derecha'), 'readonly'=>true, 'type'=>'text', 'class'=>'span-12 last', 'div'=>array('class'=>'span-18', 'id'=>'divCoord'),
+			'required'=>true
+		));
+		echo $this->Form->input('coordinador_id', array('label'=>null, 'type'=>'hidden'));
+		echo "<span class='span-2 last'>";
+		echo $this->Html->link($this->Html->image("search3.png", array("width"=>"28", 'alt'=>'buscarCoord')), '#coordinadores', array("confirm"=>null, 'id'=>'buscarCoord', "indicator"=>null, "escape"=>false)); 
+		echo "</span>";
+		echo $this->Form->input('codigo', array('label'=>array('text'=>'Código: ', 'class'=>'span-5 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-10'),
+			'required'=>true, 'title'=>'Por favor, ingresa el código del proyecto'
+		));
+		echo $this->Form->input('presupuesto', array('label'=>array('text'=>'Presupuesto: Bs.', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-12 last'),
+			'required'=>true, 'title'=>'Por favor, ingrese el monto del proyecto', 'onkeypress'=>'return isDecimal(event);'
+		));
+		
+		$statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
+		echo $this->Form->input('status', array('label'=>array('text'=>'Status: ', 'class'=>'span-5 derecha'), 'class'=>'span-5 last', 'div'=>array('class'=>'span-24 last'),
+			'options'=>$statusOpc, 'empty'=>'Seleccione...', 'required'=>true, 'title'=>'Debes seleccionar un status para el proyecto'
+		));
+		
+	?>
+<?php echo $this->Form->end(array('label'=>'Guardar', 'class'=>'span-24 last')); ?>
+</div>
+<div id='coordinadores' class='span-16 invisible'>
+<table>
+	<tr>
+		<th><h2>Personal del CPDI</h2></th>
+	</tr>
+	<?php
+		//echo count($personal);
+		foreach ($personal as $row) {
+			//pr($row);
+			$fullname = $row['Usuario']['fullname'];
+			$personal_id = $row['Usuario']['id'];
+			echo "<tr><td>";
+			echo "<a href='#divCoord' class='personal' id='$personal_id' valor='$fullname'>$fullname</a>";
+			//echo $this->Js->link($fullname, array('action'=>'getPersonal', 2), array('update' => '#divCoord', 'htmlAttributes' => array('class' => 'personal')));
+			echo "</td></tr>";
+		} 
+	?>
+</table>
+</div>
+<script>
+$(document).ready(function() {
+	$("#ProyectoAddForm").validate();
+	$("#buscarCoord").fancybox();
+	$("#ProyectoCoordinadorName").on("click", function() {
+		$.fancybox( $("#buscarCoord")); 
+		
+	});
+	$(".personal").on("click", function() {
+		valor = $(this).attr('id');
+		nombre = $(this).attr('valor');
+		$("#ProyectoCoordinadorId").val(valor);
+		$("#ProyectoCoordinadorName").val(nombre);
+		$.fancybox.close();
+	})
+});
+</script>

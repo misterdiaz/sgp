@@ -1,0 +1,60 @@
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  /*min-height: 500px;*/
+  margin-bottom: 20px;
+  margin-top:-20px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  /*min-height: 500px;*/
+  background-color: #777;
+}
+.carousel-inner > .item > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  height: auto;
+}
+
+/* Carousel adaptado a diferentes resoluciones de pantalla */
+@media (min-width: 320px) {
+	.carousel { min-height:107px; }
+	.carousel .item { min-height:107px; }
+}
+@media (min-width: 480px) {
+	.carousel { min-height:160px; }
+	.carousel .item { min-height:160px; }
+}
+@media (min-width: 640px) {
+	.carousel { min-height:213px; }
+	.carousel .item { min-height:213px; }
+}
+@media (min-width: 768px) {
+	.carousel { min-height:256px; }
+	.carousel .item { min-height:256px; }
+}
+@media (min-width: 992px) {
+	.carousel { min-height:331px; }
+	.carousel .item { min-height:331px; }
+}
+@media (min-width: 1200px) {
+	.carousel { min-height:400px; }
+	.carousel .item { min-height:400px; }
+}
+@media (min-width: 1420px) {
+	.carousel { min-height:474px; }
+	.carousel .item { min-height:474px; }
+}
+@media (min-width: 1900px) {
+	.carousel { min-height:633px; }
+	.carousel .item { min-height:633px; }
+}

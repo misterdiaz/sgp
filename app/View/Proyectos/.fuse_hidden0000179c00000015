@@ -1,0 +1,88 @@
+<?php
+$this->Html->addCrumb('Proyectos', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Reportes', array('controller'=>'Proyectos', 'action'=>'reportes'));
+$this->Html->addCrumb('Avance de actividades', '');
+?>
+<h2>Avance de Actividades por Proyectos</h2>
+
+<?= $this->Form->create('Proyecto') ?>
+<?php 
+	if($rol_id != 2){
+		$requerido = 'required';
+	}else{
+		$requerido = '';
+	}
+	$meses = array(1=>'Enero', 2=>'Febrero', 3=>'Marzo', 4=>'Abril', 5=>'Mayo', 6=>'Junio', 7=>'Julio', 8=>'Agosto', 9=>'Septiembre', 10=>'Obtubre', 11=>'Noviembre', 12=>'Diciembre');
+	$trimestre = array(1=>'1er Trimestre (Ene-Feb-Mar)', 2=>'2do Trimestre (Abr-May-Jun)', 3=>'3er Trimestre (Jul-Ago-Sep)', 4=>'4to Trimestre (Oct-Nov-Dic)');
+	$semestre = array(1=>'1er Semestre (Ene-Jun)', 2=>'2do Semestre (Jul-Dic');
+	$tiposReporte = array(1=>'Mensual', 2=>'Trimestral', 3=>'Semestral', 4=>'Anual');
+	//array_push($proyectos, 'Todos los proyectos');
+	echo $this->Form->input('incluir', array('label'=>array('text'=>'Proyecto: ', 'class'=>'span-4 derecha'), 'class'=>'span-6', 'div'=>array('class'=>'span-24 last'),
+		'options'=>$proyectos, 'empty'=>'Todos los proyectos...', $requerido
+	));
+	echo $this->Form->input('tipo', array('label'=>array('text'=>'Tipo de reporte: ', 'class'=>'span-4 derecha'), 'class'=>'span-6', 'div'=>array('class'=>'span-24 last'), 
+		'options'=>$tiposReporte, 'empty'=>'Seleccione...', 'required'=>true
+	));
+	echo $this->Form->input('mes', array('label'=>array('text'=>'Mes: ', 'class'=>'span-4 derecha'), 'class'=>'span-6', 'div'=>array('class'=>'span-24 last', 'id'=>'div_mes'), 
+		'options'=>$meses, 'empty'=>'Seleccione...', 
+	));
+	echo $this->Form->input('trimestre', array('label'=>array('text'=>'Trimestre: ', 'class'=>'span-4 derecha'), 'class'=>'span-6', 'div'=>array('class'=>'span-24 last', 'id'=>'div_trimestre'), 
+		'options'=>$trimestre, 'empty'=>'Seleccione...', 
+	));
+	echo $this->Form->input('semestre', array('label'=>array('text'=>'Semestre: ', 'class'=>'span-4 derecha'), 'class'=>'span-6', 'div'=>array('class'=>'span-24 last', 'id'=>'div_semestre'), 
+		'options'=>$semestre, 'empty'=>'Seleccione...', 
+	));
+	echo $this->Form->input('year', array('label'=>array('text'=>'Año: ', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'div'=>array('class'=>'span-24 last', 'id'=>'div_year'),
+		'default'=>date('Y')
+	));
+?>
+<?= $this->Form->end('Generar PDF') ?>
+
+<script>
+$(document).ready(function() {
+	$("#liProyectos").addClass('active');
+	$("#ulProyectos").addClass('in');
+	$("#lnk_reportes").addClass('current');
+
+	// validate signup form on keyup and submit
+	$("#ProyectoReporteActividadesPersonalForm").validate();
+
+	var tipoReporte = $("#ProyectoTipo");
+	var inital = tipoReporte.is(":checked");
+	var topics = $("#div_mes, #div_trimestre, #div_semestre, #div_year")[inital ? "removeClass" : "addClass"]("invisible");
+	iniciar();
+	//var topicInputs = topics.find("input").attr("disabled", !inital);
+	tipoReporte.click(function() {
+		iniciar();		
+	});
+	
+	function iniciar(){
+		var valor = $("#ProyectoTipo").val();
+		switch(valor){
+			case '1':
+				$("#div_mes").removeClass('invisible');
+				$("#div_trimestre, #div_semestre, #div_year").addClass('invisible');
+				$("#ProyectoMes").attr('required', true);
+				break;
+			case '2':
+				$("#div_trimestre").removeClass('invisible');
+				$("#div_mes, #div_semestre, #div_year").addClass('invisible');
+				$("#ProyectoTrimestre").attr('required', true);
+				break;
+			case '3':
+				$("#div_semestre").removeClass('invisible');
+				$("#div_mes, #div_trimestre, #div_year").addClass('invisible');
+				$("#ProyectoSemestre").attr('required', true);
+				break;
+			case '4':
+				$("#div_year").removeClass('invisible');
+				$("#div_mes, #div_trimestre, #div_semestre").addClass('invisible');
+				$("#ProyectoYear").attr('required', true);
+				break;
+			default:
+				$("#div_mes, #div_trimestre, #div_semestre, #div_year").addClass('invisible');
+				break;
+		}
+	}
+});
+</script>

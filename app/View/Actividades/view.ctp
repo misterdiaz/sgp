@@ -1,0 +1,147 @@
+<h2>Actividad: <?= $actividad['Actividad']['nombre'] ?></h2>
+<?php
+$this->Html->addCrumb('Actividades', array('controller'=>'Actividades', 'action'=>'index'));
+$this->Html->addCrumb('Detalle', '');
+$statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
+
+//pr($actividad);
+//pr($proyecto);
+?>
+<div class="row">
+	<div class="col-md-6">
+		<div class="panel panel-info">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">Información de la actividad</div>
+		  <ul class="list-group">
+		  	<li class="list-group-item"><strong>Producto:</strong> <?= $actividad['Actividad']['producto'] ?></li>
+		  	<li class="list-group-item"><strong>Fecha de inicio:</strong> <?= $actividad['Actividad']['fecha_inicio'] ?></li>
+		    <li class="list-group-item list-group-item-danger"><strong>Fecha de culminación:</strong> <?= $actividad['Actividad']['fecha_culminacion'] ?></li>		    
+		  </ul>
+		</div>
+	</div>
+	<div class="col-md-6">
+		<div class="panel panel-info">
+		  <div class="panel-heading">Información del proyecto</div>
+		  <ul class="list-group">
+		  	<li class="list-group-item"><strong>Nombre:</strong> <?= $proyecto['Proyecto']['name'] ?></li>
+		  	<li class="list-group-item"><strong>Cliente:</strong> <?= $proyecto['Proyecto']['cliente'] ?></li>
+		    <li class="list-group-item"><strong>Coordinador:</strong> <?= $proyecto['Usuario']['fullname'] ?></li>
+		  </ul>
+		</div>
+	</div>
+
+</div>
+<div class="row">
+<!-- Actualización de avance !-->
+<h2>Actualización de avance</h2>
+<div class="alert alert-info alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <strong>Nota importante: </strong> Al ingresar valores a un mes ya registrado, los datos son actualizados con el último valor ingresado.
+</div>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <strong>Advertencia!</strong> No podrá registrar un avance de actividades si se encuentra fuera del rango de la fecha de inicio y de culminación de la actividad. En caso de necesitar modificar una fecha, comuniquese con el coordinador(a) del proyecto.
+</div>
+
+<div class="col-md-12">
+<table class="table table-bordered table-striped table-responsive">
+<thead>
+	<tr class='info'>
+		<th>Año</th>
+		<th>Mes</th>
+		<th>Avance</th>
+		<th width='78px'>Acciones</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$meses = array(1=>'Enero', 2=>'Febrero', 3=>'Marzo', 4=>'Abril', 5=>'Mayo', 6=>'Junio', 7=>'Julio', 8=>'Agosto', 9=>'Septiembre', 10=>'Obtubre', 11=>'Noviembre', 12=>'Diciembre');
+
+	$total=0;
+	$fecha_inicio = turnFecha($actividad['Actividad']['fecha_inicio'], 2);
+	$fecha_culminacion = turnFecha($actividad['Actividad']['fecha_culminacion'], 2);
+	$mes_inicio = date("n", strtotime($fecha_inicio));
+	$mes_culminacion = date("n", strtotime($fecha_culminacion));
+	$year_inicio = date("Y", strtotime($fecha_inicio));
+	$year_culminacion = date("Y", strtotime($fecha_culminacion));
+	//echo "fecha_inicio: $fecha_inicio | mes_inicio: $mes_inicio | año_culminacion: $year_culminacion | fecha_culminacion: $fecha_culminacion | mes_culminacion: $mes_culminacion | año_inicio: $year_inicio";
+	
+	$actividad_id = $actividad['Actividad']['id'];
+	foreach ($actividad['Avance'] as $avance) {
+		$avance_id = $avance['id'];
+		$mes = $avance['mes'];
+		$year= $avance['year'];
+		$porcentaje = $avance['porcentaje'];
+		$total += $porcentaje;
+
+?>
+	<tr>
+		<td><?= $year ?></td>
+		<td><?= $meses[$mes] ?></td>
+		<td><?= $porcentaje ?> %</td>
+		<td class='actions'>
+			<? $this->Html->link('<span class="glyphicon glyphicon-edit"></span>', 
+			array('controller'=>'Actividades',  'action'=>'edit_avance', $avance_id, $actividad_id), array("confirm"=>null, "indicator"=>null, "escape"=>false, 
+				"data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Editar avance ".$meses[$mes].' de '.$year
+			)); ?>
+
+			<?= $this->Form->postLink('<span class="glyphicon glyphicon-trash"></span>',
+			array('controller'=>'Actividades', 'action'=>'delete_avance', $avance_id, $actividad_id), array("confirm"=>null, "indicator"=>null, "escape"=>false,
+				"data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Eliminar avance ".$meses[$mes].' de '.$year
+			)); ?>
+		</td>
+	</tr>
+<?php
+	}
+	$faltante = 100 - $total;
+?>
+	<tr>
+		<td colspan='2' style='text-align:right;'>
+			<strong>Total: </strong>
+		</td>
+		<td><strong><?= $total ?> %</strong></td>
+	</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div>&nbsp;</div>
+<?php
+	$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+	echo $this->Form->create('Actividad', array('action'=>'update_avance', 'class'=>'form-inline', 'inputDefaults'=>$defaults));
+
+	echo $this->Form->input('actividad_id', array('type'=>'hidden', 'value'=>$actividad_id));
+	if($year_inicio == $year_culminacion){
+		$mensajeY = "El año no puede ser diferente a $year_culminacion";
+	}else{
+		$mensajeY = "Pro favor ingrese un año entre $year_inicio y $year_culminacion";
+	}
+	$mInicio = $meses[$mes_inicio];
+	$mFin = $meses[$mes_culminacion];
+	$mensajeM = "Por favor seleccione un mes entre $mInicio y $mFin";
+?>
+<div class="form-group">
+	<label for="AvanceYear">Año: </label>
+	<?= $this->Form->input('year', array('required'=>true, 'value'=>$year_inicio, 'number'=>true, 'range'=>"$year_inicio, $year_culminacion", 'title'=>$mensajeY)) ?>
+	<label for="AvanceMes">Mes: </label>
+	<?= $this->Form->input('mes', array('required'=>true, 'empty'=>'Seleccione...', 'options'=>$meses, 'selected'=>date('m'), 'range'=>"$mes_inicio, $mes_culminacion", 'title'=>$mensajeM)) ?>	
+	<label for="AvancePorcentaje">Porcentaje  de avance: </label>
+	<?= $this->Form->input('porcentaje', array('required'=>true, 'title'=>"Debes ingresar un porcentaje máximo de $faltante. (Solo números enteros)", 'number'=>true, 'max'=>$faltante)) ?>
+	<div class="btn-group">
+		<button class="btn btn-default">
+			<span class="glyphicon glyphicon-ok"></span> Guardar
+		</button>
+		<?= $this->Html->link('Cancelar <span class="glyphicon glyphicon-remove"></span>', 
+			array('controller'=>'Actividades', 'action'=>'index'), array('class'=>'btn btn-default', 'escape'=>false)) ?>
+	</div>
+</div>
+
+<script>
+$(document).ready(function() {
+	$("#liActividades").addClass('active');
+	$("#ulActividades").addClass('in');
+	$("#lnk_actividades").addClass('current');
+	$('.actions a').tooltip();
+	//$("#AvanceUpdateAvanceForm").validate();
+});
+</script>

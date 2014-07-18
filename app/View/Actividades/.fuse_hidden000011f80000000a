@@ -1,0 +1,85 @@
+<h3>Agregar actividad</h3>
+<?php
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Actividad', array('class'=>'form', 'inputDefaults'=>$defaults));
+$fecha_inicio = $fechas['Proyecto']['fecha_inicio'];
+$fecha_culminacion = $fechas['Proyecto']['fecha_culminacion'];
+echo $this->Form->input('objetivo_id', array('type'=>'hidden', 'value'=>$objetivo_id));
+$statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
+?>
+<div class="form-group">
+	<label for="ActividadNombre">Nombre de la actividad:</label>
+	<?= $this->Form->input('nombre', array('required'=>true)) ?>
+</div>
+<div class="form-group">
+	<label for="ActividadProducto">Producto:</label>
+	<?= $this->Form->input('producto', array('required'=>true)) ?>
+</div>
+<div class="form-group form-horizontal">
+	<label for="ActividadResponsable" class="col-sm-2 control-label">Responsable:</label>
+	<div class="col-sm-9">
+	<?php
+		echo $this->Form->input('responsable_name', array('required'=>true, 'readonly'=>true));
+		echo $this->Form->input('responsable_id', array('type'=>'hidden'));
+	 ?>
+	 </div>
+	 <div class="col-sm-1">
+	 	<span class="glyphicon glyphicon-search" data-toggle="modal" data-target="#responsables"></span>
+	 </div>
+	 
+</div>
+<div class="form-group form-inline">
+	<label for="ActividadFechaInicio">Fecha de inicio:</label>
+	<?= $this->Form->input('fecha_inicio', array('required'=>true)) ?>
+	<label for="ActividadFechaCulminacion">Fecha de Culminación:</label>
+	<?= $this->Form->input('fecha_culminacion', array('required'=>true)) ?>
+</div>
+<div class="form-group">
+	<label for="ActividadObservacinoes">Observaciones:</label>
+	<?= $this->Form->input('observaciones', array('required'=>true)) ?>
+</div>
+<div class="form-group form-inline">
+	<label for="ActividadHoras">Horas:</label>
+	<?= $this->Form->input('horas', array()) ?>
+	<label for="ActividadPeso">Peso: (%):</label>
+	<?= $this->Form->input('peso', array()) ?>
+	<label for="ActividadStatus">Status:</label>
+	<?= $this->Form->input('status', array('required'=>true, 'options'=>$statusOpc, 'empty'=>'Seleccione...')) ?>
+</div>
+
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Proyectos', 'action'=>'view', $proyecto_id)) ?>" class="btn btn-default">Cancelar</a>
+</div>
+
+<div class="modal fade" id="responsables">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Personal del CPDI</h4>
+      </div>
+      <div class="modal-body">
+        <?php
+		foreach ($personal as $row) {
+			//pr($row);
+			$fullname = $row['Usuario']['fullname'];
+			$personal_id = $row['Usuario']['id'];
+			echo "<span class='span-5'>";
+			echo "<a href='#divCoord' class='personal' id='$personal_id' valor='$fullname'>$fullname</a>";
+			//echo $this->Js->link($fullname, array('action'=>'getPersonal', 2), array('update' => '#divCoord', 'htmlAttributes' => array('class' => 'personal')));
+			echo "</span>";
+		} 
+		?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+$(document).ready(function() {
+	
+});
+</script>

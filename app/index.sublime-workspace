@@ -1,0 +1,291 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"find",
+				"find"
+			],
+			[
+				"inp",
+				"input"
+			],
+			[
+				"gly",
+				"glyphicon-ok"
+			],
+			[
+				"remove",
+				"removeClass	.removeClass"
+			],
+			[
+				"ac",
+				"actions"
+			],
+			[
+				"col-",
+				"col-lg-6"
+			],
+			[
+				"la",
+				"label"
+			],
+			[
+				"btn",
+				"btn_edit"
+			],
+			[
+				"planilla",
+				"planilla_id"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 52.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: ins",
+				"Package Control: Install Package"
+			],
+			[
+				"insa",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 521.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/media/data/aplicaciones/admin.cpdi/untitled",
+		"/home/ldiazj/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/media/data/aplicaciones/jahazielband/app/Controller/PlanillasController.php",
+		"/media/data/aplicaciones/jahazielband/app/Controller/AppController.php",
+		"/media/data/aplicaciones/caefii/BD_caefii.sql",
+		"/home/ldiazj/.config/sublime-text-3/Packages/User/Side Bar Folders.sublime-settings",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SFTP/SFTP.sublime-settings",
+		"/home/ldiazj/.config/sublime-text-3/sftp_servers/mundial",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SFTP/sftp_servers/mundial",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SFTP/mimundial",
+		"/media/data/aplicaciones/octobercms/app/config/cms.php",
+		"/media/data/aplicaciones/octobercms/artisan",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SFTP/license.txt",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SFTP/SFTP.default-config",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/index.ctp",
+		"/media/data/aplicaciones/octobercms/app/config/app.php",
+		"/media/data/aplicaciones/octobercms/plugins/rainlab/wysiwyg/README.md",
+		"/media/data/aplicaciones/octobercms/plugins/rainlab/blog/models/post/fields.yaml",
+		"/home/ldiazj/.config/sublime-text-3/Packages/SideBarEnhancements/Side Bar.sublime-settings",
+		"/media/data/aplicaciones/octobercms/index.php",
+		"/media/data/aplicaciones/octobercms/README.md",
+		"/media/data/aplicaciones/octobercms/install.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/Controller/UsersController.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Menus/View/Elements/menu.ctp",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/View/Users/add.ctp",
+		"/media/data/aplicaciones/jahazielband/app/webroot/css/carousel.css",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/admin_estado.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/agregar.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/admin_index.ctp",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/Config/routes.php",
+		"/media/data/aplicaciones/admin.cpdi/app/View/Layouts/default.ctp",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/View/Users/login.ctp",
+		"/home/ldiazj/.config/sublime-text-3/Packages/Emmet/Emmet.sublime-settings",
+		"/home/ldiazj/.config/sublime-text-3/Packages/User/HTML.sublime-settings",
+		"/home/ldiazj/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/edit.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/add.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Planillas/view.ctp",
+		"/media/data/aplicaciones/caefii_web/app/View/Themed/CAEFII/Layouts/default.ctp",
+		"/media/data/aplicaciones/caefii/app/controllers/prestamos_controller.php",
+		"/media/data/aplicaciones/jahazielband/lib/Cake/Network/Email/CakeEmail.php",
+		"/media/data/aplicaciones/jahazielband/lib/Cake/Controller/Component/EmailComponent.php",
+		"/media/data/aplicaciones/jahazielband/lib/Cake/Config/routes.php",
+		"/media/data/aplicaciones/jahazielband/lib/Cake/Config/config.php",
+		"/media/data/aplicaciones/jahazielband/app/Config/routes.php",
+		"/media/data/aplicaciones/jahazielband/app/Config/croogo.php",
+		"/media/data/aplicaciones/jahazielband/app/Config/core.php",
+		"/media/data/aplicaciones/jahazielband/app/Config/bootstrap.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/View/Emails/text/register.ctp",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/Config/bootstrap.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/Controller/UsersAppController.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Comments/Config/bootstrap.php",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/View/Users/forgot.ctp",
+		"/media/data/aplicaciones/admin.cpdi/app/View/Panel/index.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Juegos/index.ctp",
+		"/media/data/aplicaciones/jahazielband/app/Plugin/Users/View/Users/admin_index.ctp",
+		"/media/data/aplicaciones/jahazielband/app/View/Pagos/add.ctp",
+		"/home/ldiazj/dumps/Dump20140516-1/croogo_pagos.sql",
+		"/media/data/aplicaciones/jahazielband/app/Controller/PagosController.php",
+		"/media/data/aplicaciones/jahazielband/app/Model/Pago.php",
+		"/media/data/aplicaciones/croogo/app/Plugin/Users/Controller/UsersController.php",
+		"/home/ldiazj/dumps/Dump20140516/croogo_pronosticos.sql",
+		"/home/ldiazj/dumps/Dump20140516/croogo_pagos.sql",
+		"/home/ldiazj/dumps/Dump20140516/croogo_planillas.sql",
+		"/home/ldiazj/dumps/Dump20140516/croogo_juegos.sql",
+		"/home/ldiazj/dumps/Dump20140516/croogo_eventos.sql"
+	],
+	"find":
+	{
+		"height": 27.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"<div class='row'>&nbsp;",
+			"estado",
+			"Juego",
+			"$juego"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"Planilla",
+			"$planilla"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 27.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.sftp":
+	{
+		"height": 0.0
+	},
+	"project": "index.sublime-project",
+	"replace":
+	{
+		"height": 50.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

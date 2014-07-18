@@ -1,0 +1,92 @@
+<h3>Agregar actividad</h3>
+<?php
+echo $this->Form->create('Actividad', array('class'=>'form'));
+$fecha_inicio = $fechas['Proyecto']['fecha_inicio'];
+$fecha_culminacion = $fechas['Proyecto']['fecha_culminacion']; 
+?>
+<div class="span-18 last">
+		<!--<h3>Agregar nueva actividad<h3> !-->
+	<?php
+		echo $this->Form->input('objetivo_id', array('type'=>'hidden', 'value'=>$objetivo_id));
+		echo $this->Form->input('nombre', array('label'=>array('text'=>'Nombre: ', 'class'=>'span-4 derecha'), 'class'=>'span-13', 'div'=>array('class'=>'span-18 last'),
+			'required'=>true
+		));
+		echo $this->Form->input('producto', array('label'=>array('text'=>'Producto: ', 'class'=>'span-4 derecha'), 'class'=>'span-13', 'div'=>array('class'=>'span-18 last'),
+			'required'=>true
+		));
+		echo $this->Form->input('responsable_name', array('label'=>array('text'=>'Responsable: ', 'class'=>'span-4 derecha'), 'class'=>'span-11 last', 'readonly'=>true, 'div'=>array('class'=>'span-15'),
+			'required'=>true
+		));
+		echo "<span class='span-2 last'>";
+		echo $this->Html->link($this->Html->image("search3.png", array("width"=>"28", 'alt'=>'buscar responsable')), '#responsables', array("confirm"=>null, 'id'=>'buscarResp', "indicator"=>null, "escape"=>false)); 
+		echo "</span>";
+?>
+<div id='responsables' class='span-18 last invisible'>
+<h2>Personal del CPDI</h2>
+	<?php
+		foreach ($personal as $row) {
+			//pr($row);
+			$fullname = $row['Usuario']['fullname'];
+			$personal_id = $row['Usuario']['id'];
+			echo "<span class='span-5'>";
+			echo "<a href='#divCoord' class='personal' id='$personal_id' valor='$fullname'>$fullname</a>";
+			//echo $this->Js->link($fullname, array('action'=>'getPersonal', 2), array('update' => '#divCoord', 'htmlAttributes' => array('class' => 'personal')));
+			echo "</span>";
+		} 
+	?>
+</div>
+<?php
+		echo $this->Form->input('responsable_id', array('type'=>'hidden'));
+		echo $this->Form->input('fecha_inicio', array('label'=>array('text'=>'Fecha de inicio: ', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-9'),
+			'readonly'=>true, 'required'=>true,
+		));
+		echo $this->Form->input('fecha_culminacion', array('label'=>array('text'=>'Fecha de culminación: ', 'class'=>'span-3 derecha'), 'type'=>'text', 'class'=>'span-5 last', 'div'=>array('class'=>'span-8 last'),
+			'readonly'=>true, 'required'=>true
+		));
+		echo $this->Form->input('observaciones', array('label'=>array('text'=>'Observaciones: ', 'class'=>'span-4 derecha'), 'class'=>'span-13', 'div'=>array('class'=>'span-18 last')));
+		
+		echo $this->Form->input('horas', array('label'=>array('text'=>'Horas estimadas: ', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'div'=>array('class'=>'span-6')));
+		
+		echo $this->Form->input('peso', array('label'=>array('text'=>'Peso: (%)', 'class'=>'span-2 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'div'=>array('class'=>'span-4')));
+		
+		$statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
+		echo $this->Form->input('status', array('label'=>array('text'=>'Status: ', 'class'=>'span-2 derecha'), 'options'=>$statusOpc, 'empty'=>'Seleccione...', 'class'=>'span-5 last', 'div'=>array('class'=>'span-8 last'),
+			'required'=>true
+		));
+		
+	?>
+
+	<div class="span-18 last">
+	<?php echo $this->Form->end('Guardar'); ?>
+	</div>
+</div>
+<script>
+$(document).ready(function() {
+	$("#ActividadAddForm").validate();
+	$("#buscarResp").on("click", function() {
+		$("#responsables").show();
+	});
+	$(".personal").on("click", function() {
+		valor = $(this).attr('id');
+		nombre = $(this).attr('valor');
+		$("#ActividadResponsableId").val(valor);
+		$("#ActividadResponsableName").val(nombre);
+		$("#responsables").hide();
+		//$.fancybox.close();
+	})
+	$("#ActividadFechaInicio").datepicker({
+		inline: true,
+		changeYear: true,
+		changeMonth: true,
+		minDate: '<?= $fecha_inicio ?>',
+		maxDate: '<?= $fecha_culminacion ?>',
+	});
+	$("#ActividadFechaCulminacion").datepicker({
+		inline: true,
+		changeYear: true,
+		changeMonth: true,
+		minDate: '<?= $fecha_inicio ?>',
+		maxDate: '<?= $fecha_culminacion ?>',
+	});
+});
+</script>

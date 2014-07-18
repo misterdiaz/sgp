@@ -1,0 +1,100 @@
+<h2>Avance de actividad: <?= $actividad['Actividad']['nombre'] ?></h2>
+<?php
+$this->Html->addCrumb('Actividades', array('controller'=>'Actividades', 'action'=>'index'));
+$this->Html->addCrumb('Actualizar avance', '');
+$statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
+?>
+<div class="span-16">
+	
+<b>Fecha de inicio:</b> <?= $actividad['Actividad']['fecha_inicio'] ?> | <b>Fecha de Culminación:</b> <?= $actividad['Actividad']['fecha_culminacion'] ?>
+<table class="table table-bordered table-striped">
+<thead>
+	<tr class='info'>
+		<th>Año</th>
+		<th>Mes</th>
+		<th>Avance</th>
+		<th width='76px'>Acciones</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$meses = array(1=>'Enero', 2=>'Febrero', 3=>'Marzo', 4=>'Abril', 5=>'Mayo', 6=>'Junio', 7=>'Julio', 8=>'Agosto', 9=>'Septiembre', 10=>'Obtubre', 11=>'Noviembre', 12=>'Diciembre');
+	//pr($actividad);
+	$total=0;
+	$fecha_inicio = turnFecha($actividad['Actividad']['fecha_inicio'], 2);
+	$fecha_culminacion = turnFecha($actividad['Actividad']['fecha_culminacion'], 2);
+	$mes_inicio = date("n", strtotime($fecha_inicio));
+	$mes_culminacion = date("n", strtotime($fecha_culminacion));
+	$year_inicio = date("Y", strtotime($fecha_inicio));
+	$year_culminacion = date("Y", strtotime($fecha_culminacion));
+	//echo "fecha_inicio: $fecha_inicio | mes_inicio: $mes_inicio | año_culminacion: $year_culminacion | fecha_culminacion: $fecha_culminacion | mes_culminacion: $mes_culminacion | año_inicio: $year_inicio";
+	
+	$actividad_id = $actividad['Actividad']['id'];
+	foreach ($actividad['Avance'] as $avance) {
+		$mes = $avance['mes'];
+		$year= $avance['year'];
+		$porcentaje = $avance['porcentaje'];
+		$total += $porcentaje;
+
+?>
+	<tr>
+		<td><?= $year ?></td>
+		<td><?= $meses[$mes] ?></td>
+		<td><?= $porcentaje ?> %</td>
+		<td class='actions'></td>
+	</tr>
+<?php
+	}
+	$faltante = 100 - $total;
+?>
+	<tr>
+		<td colspan='2' style='text-align:right;'>
+			<strong>Total: </strong>
+		</td>
+		<td><strong><?= $total ?> %</strong></td>
+	</tr>
+</tbody>
+</table>
+<?php
+	$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+	echo $this->Form->create('Avance', array('class'=>'form', 'inputDefaults'=>$defaults));
+
+	echo $this->Form->input('actividad_id', array('type'=>'hidden', 'value'=>$actividad_id));
+	if($year_inicio == $year_culminacion){
+		$mensajeY = "El año no puede ser diferente a $year_culminacion";
+	}else{
+		$mensajeY = "Pro favor ingrese un año entre $year_inicio y $year_culminacion";
+	}
+?>
+
+<?php
+	echo $this->Form->input('year', array('label'=>array('text'=>'Año: ', 'class'=>'span-2 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'value'=>$year_inicio, 'div'=>array('class'=>'span-4'),
+		'minlength'=>'4', 'maxlength'=>'4', 'required'=>true, 'number'=>true, 'range'=>"$year_inicio, $year_culminacion", 'title'=>$mensajeY
+	));
+	$mInicio = $meses[$mes_inicio];
+	$mFin = $meses[$mes_culminacion];
+	$mensajeM = "Por favor seleccione un mes entre $mInicio y $mFin";
+	echo $this->Form->input('mes', array('label'=>array('text'=>'Mes: ', 'class'=>'span-2 derecha'), 'class'=>'span-2 last', 'empty'=>'Seleccione...', 'div'=>array('class'=>'span-4'),
+		'options'=>$meses, 'selected'=>date('m'), 'required'=>true, 'range'=>"$mes_inicio, $mes_culminacion", 'title'=>$mensajeM
+	));
+	echo $this->Form->input('porcentaje', 
+		array('label'=>array('text'=>'Porcentaje  de avance: ', 'class'=>'span-4 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'after'=>'%', 'div'=>array('class'=>'span-7 last'),
+		'required'=>true, 'title'=>"Debes ingresar un porcentaje máximo de $faltante. (Solo números enteros)", 'number'=>true, 'max'=>$faltante
+	));
+	//echo $this->Form->input('avance', array('label'=>array('text'=>'Porcentaje  de avance (%): ', 'class'=>'span-5 derecha'), 'type'=>'text', 'class'=>'span-2 last', 'maxlength'=>'3', 'onkeypress'=>'return isNumero(event);','value'=>'', 'div'=>array('class'=>'span-9')));
+?>
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Actividades', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
+</div>
+	<div class='span-15 notice'>
+		<p>
+		<b>Nota:</b> No podrá ingresar un avance de actividades si se encuentra fuera del rango de la fecha de inicio y de culminación de la actividad. 
+		En caso de necesitar modificar una fecha, comuniquese con el coordinador(a) del proyecto.
+		</p>
+	</div>
+</div>
+
+<script>
+$("#AvanceUpdateAvanceForm").validate();
+</script>

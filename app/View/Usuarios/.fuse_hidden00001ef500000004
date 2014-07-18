@@ -1,0 +1,76 @@
+<?php
+/*******************************************************************************
+*    República Bolivariana de Venezuela
+*    Ministerio del Poder para Ciencia, Tecnología e Industrias Intermedias
+*    Fundación Instituto de Ingenieria
+*    Centro de Procesamiento Digital de Imagenes
+*    
+*     Archivo: login.ctp
+*     Fecha de Creación: 21/09/2010
+*     Creado por: Ing. Luis Alfredo Diaz Jaramillo - ldiazj@fii.gob.ve
+*     
+*******************************************************************************/
+//echo md5('16933421');
+//echo AuthComponent::password('16326344');
+?>
+<?= $this->Form->create('Usuario', array('action' =>'login')); ?>
+<form class="form-signin">
+	<h2 class="form-signin-heading">Please sign in</h2>
+	<input type="text" class="form-control" placeholder="Usuario" autofocus>
+	<input type="password" class="form-control" placeholder="Contraseña">
+	<label class="checkbox">
+	  <input type="checkbox" value="remember-me"> Remember me
+	</label>
+	<button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
+    
+	<?php
+    echo $this->Form->input('login', array('class'=>'span-5', 'required'=>'true', 'title'=>'Debe ingresar un nombre de usuario', 'label'=>array('text'=>'Nombre de usuario: ', 'class'=>'span-4 derecha'), 'div'=>array('class'=>'span-9 last', 'style'=>'margin: 0 0 5px 0; padding:0;')));
+    echo $this->Form->input('clave', array('type'=>'password', 'class'=>'span-5', 'minlength'=>4, 'label'=>array('text'=>'Contrase&ntilde;a: ','class'=>'span-4 derecha'), 'div'=>array('class'=>'span-9 last', 'style'=>'margin: 0 0 5px 0; padding:0;'), 'required'=>'required'));
+    echo "<div class='submit' style='text-align:center;'>";
+	echo "<button id=\"entrar\">Entrar</button>";
+	echo "</div>";
+	echo $this->Form->end();
+    ?>
+<style type="text/css">
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+</style>
