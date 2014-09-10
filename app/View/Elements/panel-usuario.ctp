@@ -53,7 +53,7 @@ $rol_des = AuthComponent::user('Rol.descripcion');
 
   <div class="panel-footer">
   	<div class="btn-group">
-		<?= $this->Html->link('Actualizar datos', array('controller'=>'Usuarios', 'action'=>'update', $user_id,'admin'=>false), 
+		<?= $this->Html->link('Actualizar datos', array('controller'=>'Usuarios', 'action'=>'update', 'admin'=>false), 
 			array('class'=>'btn btn-primary')) ?>
 		<?= $this->Html->link('Cambiar clave', array('controller'=>'Usuarios', 'action'=>'change_password','admin'=>false), 
 			array('class'=>'btn btn-primary')) ?>

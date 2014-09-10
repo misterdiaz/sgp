@@ -96,18 +96,15 @@ class UsuariosController extends AppController {
 		}
 		if (!empty($this->request->data)) {
 			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash(__('The usuario has been saved', true));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash('Tu perfil ha sido actualizado');
+				$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The usuario could not be saved. Please, try again.', true));
+				$this->Session->setFlash('Tu perfil no fue actualizado. Por favor, intente nuevamente.');
 			}
 		}
 		if (empty($this->data)) {
 			$this->request->data = $this->Usuario->read(null, $id);
-			$this->request->data['Usuario']['clave'] = "";
 		}
-		$roles = $this->Usuario->Rol->find('list');
-		$this->set(compact('roles'));
 	}
 
 	function admin_delete($id = null) {
