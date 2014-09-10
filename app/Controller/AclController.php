@@ -134,12 +134,11 @@ class AclController extends AppController
 	function admin_permisos(){
 		//$this->layout = "admin";
 		//pr($this->Auth->user());
-		$aros = $this->Rol->find(
-			'list',
+		$aros = $this->Rol->find('list',
 			array (
-			'fields'=> array('Rol.id', 'Rol.nombre'), //array de nombres de campos
-			//'conditions'=>array(''=>null),
-			'order'=>array('Rol.id'), //string o array definiendo el orden
+				'fields'=> array('Rol.id', 'Rol.nombre'), //array de nombres de campos
+				//'conditions'=>array(''=>null),
+				'order'=>array('Rol.id'), //string o array definiendo el orden
 			)
 		);
 		//pr($aros);
@@ -148,47 +147,44 @@ class AclController extends AppController
 	
 	function admin_aro_view_miembros(){
 		//pr($this->data);
-		if(!empty($this->data) && $this->data['Aro']['aro']){
-			$aro_id = $this->data['Aro']['aro'];
-			$miembros = $this->Aro->find(
-			'all',
+		if(!empty($this->data) && $this->data['Acl']['aro']){
+			$aro_id = $this->data['Acl']['aro'];
+			$miembros = $this->Aro->find('all',
 				array (
-				'conditions'=> array ('Aro.parent_id'=>$aro_id), //array de condiciones
-				'recursive'=>1, //int
-				'fields'=> array ('Aro.id', 'Aro.alias'), //array de nombres de campos
-				'order'=>null, //string o array definiendo el orden
-				'group'=> array (), //campos para GROUP BY
-				'limit'=>null, //int
-				'page'=>null //int
+					'conditions'=> array ('Aro.parent_id'=>$aro_id), //array de condiciones
+					'recursive'=>1, //int
+					'fields'=> array ('Aro.id', 'Aro.alias'), //array de nombres de campos
+					'order'=>null, //string o array definiendo el orden
+					'group'=> array (), //campos para GROUP BY
+					'limit'=>null, //int
+					'page'=>null //int
 				)
 			);
-			$grupo = $this->Aro->find(
-			'all',
+			$grupo = $this->Aro->find('all',
 				array (
-				'conditions'=> array ('Aro.id'=>$aro_id), //array de condiciones
-				'recursive'=>1, //int
-				'fields'=> array ('Aro.id'), //array de nombres de campos
-				'order'=>null, //string o array definiendo el orden
-				'group'=> array(), //campos para GROUP BY
-				'limit'=>null, //int
-				'page'=>null //int
+					'conditions'=> array ('Aro.id'=>$aro_id), //array de condiciones
+					'recursive'=>1, //int
+					'fields'=> array ('Aro.id'), //array de nombres de campos
+					'order'=>null, //string o array definiendo el orden
+					'group'=> array(), //campos para GROUP BY
+					'limit'=>null, //int
+					'page'=>null //int
 				)
 			);
 			//echo $aro_id;
 			
-			$objetos = $this->Aco->find(
-			'list',
+			$objetos = $this->Aco->find('list',
 				array (
-				'conditions'=> array ('parent_id=1'), //array de condiciones
-				'recursive'=>1, //int
-				'fields'=> array ('Aco.id', 'Aco.alias'), //array de nombres de campos
-				'order'=>null, //string o array definiendo el orden
-				'group'=> array (), //campos para GROUP BY
-				'limit'=>null, //int
-				'page'=>null //int
+					'conditions'=> array ('parent_id=1'), //array de condiciones
+					'recursive'=>1, //int
+					'fields'=> array ('Aco.id', 'Aco.alias'), //array de nombres de campos
+					'order'=>null, //string o array definiendo el orden
+					'group'=> array (), //campos para GROUP BY
+					'limit'=>null, //int
+					'page'=>null //int
 				)
 			);
-			
+			$this->set('aro_id', $aro_id);
 			
 		}else{
 			$grupo = $miembros = $objetos =array();
@@ -201,10 +197,14 @@ class AclController extends AppController
 		
 		
 	}
+
+	public function admin_procesar_permiso() {
+
+	}
 	
 	function admin_grupo_permiso($aro_id) {
-		$this->request->data['Aro']['aro'] = $aro_id;
-		$aco_id = $this->request->data['aco'];
+		$this->request->data['Acl']['aro'] = $aro_id;
+		$aco_id = $this->request->data['Acl']['aco'];
 		$aro_alias = $this->Aro->read('alias', $aro_id);
 		$aro_alias = $aro_alias['Aro']['alias'];
 		$aco_alias = $this->Aco->read('alias', $aco_id);
@@ -212,13 +212,13 @@ class AclController extends AppController
 		$fk = $this->Aro->read('foreign_key', $aro_id);
 		//pr($fk);
 		$aro= array('model'=>'Rol', 'foreign_key'=>$fk['Aro']['foreign_key']);
-		$tipo = $this->request->data['tipo'];
-		if($this->_setPermisos($aro, $aco, $tipo, $this->request->data['permisos'])){
-			$this->set('msg_flash', "Los permisos han sido asignados con exito");
+		$tipo = $this->request->data['Acl']['tipo'];
+		if($this->_setPermisos($aro, $aco, $tipo, $this->request->data['Acl']['permisos'])){
+			$this->Session->setFlash(__('Los permisos han sido asignados con exito'));
 		}else{
-			$this->set('msg_flash', "Los permisos no han sido asignados. Por favor, verifique los datos he intente nuevamente");
+			$this->Session->setFlash(__('Los permisos no han sido asignados. Por favor, verifique los datos he intente nuevamente'));
 		}
-		$aro_id = $this->request->data['Aro']['aro'];
+		$aro_id = $this->request->data['Acl']['aro'];
 			$miembros = $this->Aro->find(
 			'all',
 				array (
@@ -261,8 +261,8 @@ class AclController extends AppController
 		$this->set('grupo', $grupo);
 		$this->set('miembros', $miembros);
 		$this->set('objetos', $objetos);
-		
-		$this->render('admin_aro_view_miembros');
+		$this->redirect(array('controller'=>'Acl', 'action' => 'permisos', 'admin'=>true));
+		//$this->render('admin_aro_view_miembros');
 		
 	}
 	
@@ -333,7 +333,7 @@ class AclController extends AppController
 	}
 	
 	function admin_aro_miembro_add($aro_id) {
-		$this->layout= "ajax";
+		//$this->layout= "ajax";
 		$usuarios = $this->Usuario->find(
 		'list', 
 		array(
@@ -367,15 +367,15 @@ class AclController extends AppController
 	function admin_aro_miembro_add_permiso($aro_id){
 		
 		//pr($this->data);
-		$aco_id = $this->data['Aro']['aco_id'];
-		$usuario_id = $this->data['Aro']['usuario_id'];
+		$aco_id = $this->data['Acl']['aco_id'];
+		$usuario_id = $this->data['Acl']['usuario_id'];
 		$aro_alias = $this->Aro->read('alias', $aro_id);
 		$aro_alias = $aro_alias['Aro']['alias'];
 		$aco_alias = $this->Aco->read('alias', $aco_id);
 		$aco = $aco_alias['Aco']['alias'];
-		$tipo = $this->data['tipo2'];
+		$tipo = $this->data['Acl']['tipo'];
 		
-		if($this->_setPermisosMiembros($usuario_id, $aco, $tipo, $this->data['permisos2'])){
+		if($this->_setPermisosMiembros($usuario_id, $aco, $tipo, $this->data['Acl']['permisos'])){
 			//$this->set('msg_flash', "Los permisos han sido asignados con exito.");
 			$this->Session->setFlash("Los permisos han sido asignados con exito.");
 		}else{
@@ -424,7 +424,7 @@ class AclController extends AppController
 		$this->set('grupo', $grupo);
 		$this->set('miembros', $miembros);
 		$this->set('objetos', $objetos);
-		$this->render('admin_aro_view_miembros');
+		$this->redirect(array('controller'=>'Acl', 'action' => 'permisos', 'admin'=>true));
 	}
 	
 	function admin_buildAcl() {

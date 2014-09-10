@@ -1,0 +1,19 @@
+<?php
+$this->Html->addCrumb('Usuario', array('controller'=>'Panel', 'action'=>'index'));
+$this->Html->addCrumb('Actualizar datos', '');
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Vacacion', array('class'=>'form', 'inputDefaults'=>$defaults));
+?>
+<h2>Actualizar datos del usuario</h2>
+<div class="row">
+	<div class="form-group">
+		<label for="UsuarioNombre" class="control-label">Desde:</label>
+			<?= $this->Form->input('nombre', array('required'=>true, 'class'=>'form-control'); ?>
+	</div>
+</div>
+<div class="row">
+	<div class="form-group">
+		<label for="UsuarioApellido" class="control-label">Desde:</label>
+			<?= $this->Form->input('apellido', array('required'=>true, 'class'=>'form-control'); ?>
+	</div>
+</div>

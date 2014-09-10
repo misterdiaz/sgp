@@ -13,7 +13,7 @@ class UsuariosController extends AppController {
 		parent::beforeFilter();
 		//$this->Auth->autoRedirect = false;
 		//$this->Auth->authorize = 'crud';
-		$this->Auth->allowedActions = array('login', 'logout', 'admin_login', 'admin_logout');//Descomentar esta linea para las acciones a las cuales queremos dar libre acceso. (Usar * para dar acceso a todas las acciones.)
+		$this->Auth->allowedActions = array('login', 'logout', 'admin_login', 'admin_logout', 'change_password');//Descomentar esta linea para las acciones a las cuales queremos dar libre acceso. (Usar * para dar acceso a todas las acciones.)
 	}
 
 	function admin_index() {
@@ -28,10 +28,29 @@ class UsuariosController extends AppController {
 
 	function view($id = null) {
 		if (!$id) {
-			$this->Session->setFlash(__('Invalid usuario', true));
+			$this->Session->setFlash('Usuario invalido');
 			$this->redirect(array('action' => 'index'));
 		}
 		$this->set('usuario', $this->Usuario->read(null, $id));
+	}
+
+	public function change_password() {
+		if(!$this->Auth->user()){
+			$this->Session->setFlash('Debes iniciar sesión para poder realizar el cambio de clave.');
+			$this->redirect(array('controller'=>'Usuarios', 'action' => 'login', 'admin'=>false));
+		}
+		if (!empty($this->request->data)) {
+			$id = AuthComponent::user('id');
+			$this->request->data['Usuario']['id']=$id;
+			$this->Usuario->id = $id;
+			if($this->Usuario->save($this->request->data)){
+				$this->Session->setFlash('Clave modificada con exito');
+				$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));
+			}else{
+				$this->Session->setFlash('La clave no fue modificada. Por favor, intente nuevamente.');
+				$this->redirect(array('controller'=>'Usuario', 'action' => 'change_password', 'admin'=>false));
+			}
+		}
 	}
 
 	function admin_add() {
@@ -49,6 +68,28 @@ class UsuariosController extends AppController {
 	}
 
 	function admin_edit($id = null) {
+		if (!$id && empty($this->request->data)) {
+			$this->Session->setFlash(__('Invalid usuario', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		if (!empty($this->request->data)) {
+			if ($this->Usuario->save($this->request->data)) {
+				$this->Session->setFlash(__('The usuario has been saved', true));
+				$this->redirect(array('action' => 'index'));
+			} else {
+				$this->Session->setFlash(__('The usuario could not be saved. Please, try again.', true));
+			}
+		}
+		if (empty($this->data)) {
+			$this->request->data = $this->Usuario->read(null, $id);
+			$this->request->data['Usuario']['clave'] = "";
+		}
+		$roles = $this->Usuario->Rol->find('list');
+		$this->set(compact('roles'));
+	}
+
+	public function update($id = null) {
+		$id = $this->Auth->user('id');
 		if (!$id && empty($this->request->data)) {
 			$this->Session->setFlash(__('Invalid usuario', true));
 			$this->redirect(array('action' => 'index'));
@@ -104,22 +145,7 @@ class UsuariosController extends AppController {
 	}
 	
 	function admin_login(){
-		//$this->Auth->user('tipo_persona_id');
-		
-		if(!empty($this->data)){
-			$this->Auth->__setDefaults();
-			$this->Auth->_loggedIn = false;
-			//pr($this->data);
-			if ($user = $this->Auth->identify($this->data)) {
-				$this->Session->setFlash('Usted ha iniciado sesión.');
-				$this->Session->write($this->Auth->sessionKey, $user);
-				$this->Auth->_loggedIn = true;
-			}else{
-				$this->Session->setFlash('Lo siento, la combinación usuario/clave es incorrecta');
-			}
-			$this->redirect($this->Auth->redirect());
-		}
-		//pr($this->Auth->user());
+		$this->redirect(array('controller'=>'Usuarios', 'action'=>'login', 'admin'=>false));
 	}
 	
 	

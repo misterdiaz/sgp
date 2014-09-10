@@ -221,12 +221,7 @@ $(function() {
 		</div>
 	</div>
 	<?php echo $this->element('sql_dump'); ?>
-	<?php
+<?= $this->Element('mensajes')?>
 
-		
-	?>
-<div style="display:none;">
-<a href="http://apycom.com/">Apycom jQuery Menus</a>
-</div>
 </body>
 </html>

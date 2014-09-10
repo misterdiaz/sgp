@@ -44,7 +44,7 @@ $tasks =  json_encode($gantt);
 <?php
 	$defaults = array('label'=>false, 'div'=>false);
 
-	echo $this->Form->create('Proyecto', array('class'=>'form-horizontal', 'inputDefaults'=>$defaults));
+	//echo $this->Form->create('Proyecto', array('class'=>'form-horizontal', 'inputDefaults'=>$defaults));
 	$urlObjAdd = $this->Html->url(array("controller"=>"Objetivos", "action"=>"add", $proyecto["Proyecto"]["id"]));
 
 ?>
@@ -80,27 +80,12 @@ $tasks =  json_encode($gantt);
   <div class="panel-heading">
   Archivos <button type="button" class="btn btn-default btn-sm " data-toggle='modal' data-target="#uploader">Agregar <span class="glyphicon glyphicon-plus-sign"></span></button>
   </div>
-  <div class="panel-body"> </div>
+  <?= $this->Element('listar_directorio', array('proyecto_id'=>$proyecto["Proyecto"]["id"])) ?>  
 </div>
-
-<div class="modal fade" id="uploader">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Subir archivos</h4>
-      </div>
-      <div class="modal-body">
-        <?= $this->Element('uploader') ?>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary">Guardar</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+<?= $this->Element('uploader', array('proyecto_id'=>$proyecto["Proyecto"]["id"])) ?>  
 <!-- FIN DEL MANEJO DE ARCHIVOS !-->
 
+<div>&nbsp;</div>
 <div class="panel panel-info">
   <div class="panel-heading">
   	<a data-toggle="collapse" href="#objetivos">Objetivos especificos</a>

@@ -37,21 +37,14 @@ $pdf->MultiCell($w=0, $h=6, $tipo, $border="", $align='C', $fill=false, $ln=1, $
 $pdf->Ln();
 $pdf->SetFont($textfont,'B',12);
 
-$html_header = '
-<table border="0.5px" style="margin:5px;text-align:justify;">
-	<tr>
-		<th style="text-align:center;font-weight:bold;" width="150px">Nombre y Apellido</th>
-		<th style="text-align:center;font-weight:bold;" width="280px">Actividad</th>
-		<th style="text-align:center;font-weight:bold;" width="80px">Fecha<br/>Inicio</th>
-		<th style="text-align:center;font-weight:bold;" width="80px">Fecha<br/>Culminacion</th>
-		<th style="text-align:center;font-weight:bold;" width="50px">% Avance</th>
-		<th style="text-align:center;font-weight:bold;" width="70px">Estado</th>
-	</tr>';
-$html_body = $ant = "";
 $html = "";
 //pr($Proyecto);
+$vector = array();
 $status = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
 $pdf->SetFont($textfont,'', 11);
+$vectorP = array();
+$projectoName['Proyecto'] = array();
+$contador = $contadorJ=0;
 foreach ($Proyecto as $row) {
 	$nombre_proyecto = $row['VActividad']['proyecto'];
 	if(empty($ant)) $ant = $nombre_proyecto;
@@ -65,28 +58,55 @@ foreach ($Proyecto as $row) {
 	$avance = $row[0]['avance'];
 	$estado = $row['VActividad']['status_actividad'];
 	
-	 $html_body .= '
-	<tr style="vertical-align: inherit;">
-		<td>'.$nombre.'</td>
-		<td>'.$actividad.'</td>
-		<td>'.$fecha_inicio.'</td>
-		<td>'.$fecha_culminacion.'</td>
-		<td style="text-align:rigth;">'.$avance.'</td>
-		<td style="text-align:center;">'.$status[$estado].'</td>
-	</tr>';
+	$Persona['nombre'] =  $nombre;
+	$Persona['actividad'] =  $actividad;
+	$Persona['fecha_inicio'] = $fecha_inicio;
+	$Persona['fecha_culminacion'] = $fecha_culminacion;
+	$Persona['avance'] = $avance;
+	$Persona['estado'] = $status[$estado];
+
 	if($ant != $nombre_proyecto){
-		$pdf->SetFont($textfont,'B', 14);
-		//$pdf->Ln();
-		//$pdf->MultiCell($w=0, $h=6, "Proyecto: ".$ant, $border="", $align='L', $fill=false, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
-		$h2 = "<h3> Proyecto: ".$ant."</h3>";
-		$html .= $h2.$html_header.$html_body.'</table><br/>';
-		$pdf->SetFont($textfont,'', 12);
-		$ant = 	$nombre_proyecto;
-		//echo $html;
-		$html_body = "";
+		$projectoName['Proyecto']['Titulo'] = $ant;
+		$projectoName['Proyecto']['Personas'] = $vectorP;
+		$vectorP = array();
+		array_push($vector, $projectoName);
 	}
+	$ant = $nombre_proyecto;
+	array_push($vectorP, $Persona);
 	
 }//FIN FOREACH $Proyecto
+$projectoName['Proyecto']['Titulo'] = $ant;
+$projectoName['Proyecto']['Personas'] = $vectorP;
+array_push($vector, $projectoName);
+$html_header = '
+<table border="0.5px" style="margin:5px;text-align:justify;">
+	<tr>
+		<th style="text-align:center;font-weight:bold;" width="150px">Nombre y Apellido</th>
+		<th style="text-align:center;font-weight:bold;" width="280px">Actividad</th>
+		<th style="text-align:center;font-weight:bold;" width="80px">Fecha<br/>Inicio</th>
+		<th style="text-align:center;font-weight:bold;" width="80px">Fecha<br/>Culminacion</th>
+		<th style="text-align:center;font-weight:bold;" width="50px">% Avance</th>
+		<th style="text-align:center;font-weight:bold;" width="70px">Estado</th>
+	</tr>';
+foreach ($vector as $vec) {
+	$titulo = $vec['Proyecto']['Titulo'];
+	$pdf->SetFont($textfont,'B', 14);
+	$html .= "<ul><li><h3>$titulo</h3></li></ul>";
+	$pdf->SetFont($textfont,'', 12);
+	$html .= $html_header;
+	foreach ($vec['Proyecto']['Personas'] as $persona) {
+		$html .= '<tr>
+				<td>'.$persona['nombre'].'</td>
+				<td>'.$persona['actividad'].'</td>
+				<td>'.$persona['fecha_inicio'].'</td>
+				<td>'.$persona['fecha_culminacion'].'</td>
+				<td>'.$persona['avance'].'</td>
+				<td>'.$persona['estado'].'</td>
+			</tr>
+		';
+	}
+	$html .= "</table>";
+}
 $pdf->writeHTML($html);
 //$pdf->MultiCell($w=0, $h=6,$html, $border="TLRB", $align='J', $fill=false, $ln=1, $x='', $y='', $reseth=true, $stretch=0, $ishtml=true, $autopadding=true, $maxh=0, $valign='T', $fitcell=false);
 //echo $html;exit;

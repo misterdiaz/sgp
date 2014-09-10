@@ -17,7 +17,7 @@ class ActividadesController extends AppController {
 		$this->Auth->mapActions(
 			array(
 			//'create' => array(),
-			'read' => array('listActividades'),
+			'read' => array('listActividades', 'delete_avance'),
 			'update' => array('update_avance'),
 			//'delete' => array('evento_personal_delete')
 			)

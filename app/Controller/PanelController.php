@@ -17,7 +17,7 @@ class PanelController extends AppController
 
     var $name = 'Panel';
     var $helpers = array ('Html', 'Form');
-    //var $uses = array ();
+    var $uses = array ('Actividad', 'Permiso', 'Periodo');
     var $components = array ('RequestHandler', 'Auth');
 
 	function beforeFilter() {
@@ -34,7 +34,31 @@ class PanelController extends AppController
 	}
 	
     function index(){
-		
+        $usuario_id = AuthComponent::user('id');
+        $rol_id = AuthComponent::user('rol_id');
+        $act_cond = array('responsable_id'=>$usuario_id, "fecha_culminacion BETWEEN ? AND ?" => array(date('Y-m-d'), date('Y-m-d', strtotime("+2 weeks"))));
+		$actividades = $this->Actividad->find('all', array(
+            'conditions'=>$act_cond, 'recursive'=>-1
+        ));
+        $per_cond = array('usuario_id'=>$usuario_id, 'status <'=>4);
+        $permisos = $this->Permiso->find('all', array(
+            'conditions'=>$per_cond, 'recursive'=>-1, 'order'=>'fecha_desde ASC',
+            'fields'=>'Permiso.id, fecha_solicitud, fecha_desde, fecha_hasta, status, nro_dias',
+        ));
+        $periodos = $this->Periodo->Find('all', array(
+                'conditions'=>array('usuario_id'=>$this->Auth->user('id')),
+                'recursive'=>-1, 'order'=>'year ASC',
+            ));
+        if($rol_id == 2){
+           $per_cond = array('status'=>1);
+           $solicitudes = $this->Permiso->find('all', array(
+                'conditions'=>$per_cond, 'recursive'=>-1, 'order'=>'fecha_desde ASC',
+                'fields'=>'Permiso.id, fecha_solicitud, fecha_desde, fecha_hasta, status, nro_dias',
+            )); 
+           $this->set(compact('solicitudes'));
+           //pr($solicitudes);
+        }
+        $this->set(compact('actividades', 'permisos', 'periodos'));
     }
 	
 	function admin_index(){

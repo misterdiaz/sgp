@@ -11,8 +11,8 @@
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li><?= $this->Html->link('Panel', array('controller'=>'Panel', 'admin'=>false)) ?></li>
         <li><?= $this->Html->link('Configuración', array('controller'=>'Panel', 'admin'=>true)) ?></li>
+        <li><?= $this->Html->link('Cerrar Sesión', array('controller'=>'Usuarios', 'action'=>'logout', 'admin'=>false)) ?></li>
         <li><a href="#">Ayuda</a></li>
       </ul>
       <form class="navbar-form navbar-right">

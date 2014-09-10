@@ -132,9 +132,9 @@ Cache::config('default', array('engine' => 'File'));
  * Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'uninflected' => array()));
  *
  */
-Inflector::rules('singular', array('rules' => array('/(.*)res$/i' => '\1r', '/(.*)nes$/i' => '\1n', '/(.*)les$/i' => '\1l', '/(.*)des$/i' => '\1d', '/(.*)ses$/i' => '\1s'), 'irregular' => array(), 'uninflected' => array()));
+Inflector::rules('singular', array('rules' => array('/(.*)res$/i' => '\1r', '/(.*)nes$/i' => '\1n', '/(.*)les$/i' => '\1l', '/(.*)des$/i' => '\1d', '/(.*)ses$/i' => '\1s'), 'irregular' => array(), 'uninflected' => array('DiasDisponibles')));
 
-Inflector::rules('plural', array('rules' => array('/(.*)r$/i' => '\1res', '/(.*)n$/i' => '\1nes', '/(.*)l$/i' => '\1les', '/(.*)d$/i' => '\1des', '/(.*)s$/i' => '\1ses'), 'irregular' => array('Bases'=>'Base'), 'uninflected' => array() ) );
+Inflector::rules('plural', array('rules' => array('/(.*)r$/i' => '\1res', '/(.*)n$/i' => '\1nes', '/(.*)l$/i' => '\1les', '/(.*)d$/i' => '\1des', '/(.*)s$/i' => '\1ses'), 'irregular' => array('Bases'=>'Base'), 'uninflected' => array('Acl', 'DiasDisponibles') ) );
 /**
  * Plugins need to be loaded manually, you can either load them one by one or all of them in a single call
  * Uncomment one of the lines below, as you need. make sure you read the documentation on CakePlugin to use more

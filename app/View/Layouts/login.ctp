@@ -16,6 +16,12 @@
         'miestilo',
         'signin',
       ));
+      echo $this->Html->script(array(
+      'jquery.min',
+      'bootstrap.min',
+      'hc/highcharts',
+      'uploader'
+     ));
     ?>
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -30,5 +36,7 @@
     <div class="container">
       <?php echo $content_for_layout; ?>
     </div> <!-- /container -->
+<? echo $this->Js->writeBuffer(); ?>
+    <?= $this->Element('mensajes')?>
   </body>
 </html>

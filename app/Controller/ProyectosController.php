@@ -22,8 +22,8 @@ class ProyectosController extends AppController {
 		//$this->Auth->authorize = array('Actions');
 		$this -> Auth -> mapActions(array(
 			'create' => array(''), 
-			'read' => array('listProyectos', 'resumen', 'reporteResumen', 'reporteActividadesPersonal', 'reporteActividadesProyecto', 'reporteActividades', 'reporte_actividades_pdf', 'reportes'), 
-			'update' => array('edit_porcentaje', 'resumenPdf'),
+			'read' => array('listProyectos', 'resumen', 'reporteResumen', 'reporteActividadesPersonal', 'reporteActividadesProyecto', 'reporteActividades', 'reporte_actividades_pdf', 'reportes', 'addFile'), 
+			'update' => array('edit_porcentaje', 'resumenPdf', 'deleteArchivo'),
 			//'delete' => array('evento_personal_delete')
 		));
 
@@ -628,6 +628,45 @@ class ProyectosController extends AppController {
 		//'recursive'=>-1
 		));
 		$this -> set(compact('actividades'));
+	}
+
+	public function addFile(){
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		
+		$this->request->data['Proyecto']['archivo']['proyecto_id'] = $this->request->data['Proyecto']['proyecto_id'];
+		$archivo = $this->request->data['Proyecto']['archivo'];
+		$proyecto_id = $this->request->data['Proyecto']['proyecto_id'];
+		//pr($archivo);
+		if($this->moverArchivo($archivo)){
+			$this -> Session -> setFlash('El archivo fue agregado al proyecto con correctamente.');
+		}else{
+			$this -> Session -> setFlash('Ocurrieron errores al subir el archivo. Por favor, intente nuevamente.');
+		}
+		$this -> redirect(array('action' => 'view', $proyecto_id));
+		
+	}
+
+	public function moverArchivo($archivo){
+		$proyecto_id = $archivo['proyecto_id'];
+		$ruta = WWW_ROOT."/files/proyectos/".$proyecto_id."/";
+		if( !file_exists($ruta) ) mkdir($ruta, 0777, true);
+		if(move_uploaded_file($archivo['tmp_name'], $ruta.$archivo['name'])) return true;
+		else return false;
+	}
+
+	public function deleteArchivo($proyecto_id){
+		if (!$this -> request -> is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		//pr($this->request->data);
+		$ruta = "/files/proyectos/".$proyecto_id."/";
+		$archivo = WWW_ROOT.$ruta.$this->request->data['name'];
+		if (unlink($archivo)) http_response_code(200);
+		else http_response_code(404);
+		exit;
+
 	}
 
 }

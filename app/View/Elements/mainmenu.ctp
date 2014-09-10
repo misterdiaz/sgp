@@ -26,7 +26,7 @@ if (AuthComponent::user('id')):
   <li id="liHoras">
     <a data-toggle="collapse" data-parent="#accordion" href="#ulHoras">Registro de Horas <b class="caret"></b></a>
     <ul id="ulHoras" class="ul-collapse collapse nav nav-stacked sub-nav">
-      <li><?= $this->Html->link('Registro', array('controller'=>'Horas', 'action'=>'dedicacion', 'admin'=>false), array('id'=>'lnk_registro_horas')) ?></li>
+      <li><?= $this->Html->link('Registro', array('controller'=>'Horas', 'action'=>'add', 'admin'=>false), array('id'=>'lnk_registro_horas')) ?></li>
     </ul>
   </li>
 </ul>

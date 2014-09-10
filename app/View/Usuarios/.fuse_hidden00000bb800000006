@@ -1,0 +1,57 @@
+<h2>Cambiar clave</h2>
+<?php
+$this->Html->addCrumb('Cambiar clave', '');
+
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Usuario', array('class'=>'form', 'inputDefaults'=>$defaults));
+$usuario_id = AuthComponent::user('id');
+?>
+<div class="row">
+	<div class="form-group  form-horizontal">
+		<label for="UsuarioClave" class="control-label col-md-2">Nueva Contraseña: </label>
+		<div class='col-md-4'>
+			<?= $this->Form->input('clave', array('required'=>true, 'class'=>'form-control', 'type'=>'password')) ?>
+			<span id="span1" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="UsuarioClave2" class="control-label col-md-2">Confirmar Contraseña: </label>
+		<div class='col-md-4'>
+			<?= $this->Form->input('clave2', array('required'=>true, 'class'=>'form-control', 'type'=>'password')) ?>
+			<span id="span2" class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
+		</div>
+	</div>
+</div>
+<div>&nbsp;</div>
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
+</div>
+<script type="text/javascript">
+$(document).ready(function () {
+	var valido=false;
+    $("#UsuarioClave2").keyup(function(e) {
+        var pass = $("#UsuarioClave").val();
+        var re_pass=$("#UsuarioClave2").val();
+ 
+        if(pass != re_pass){
+        	$('#span2').removeClass('glyphicon-warning-sign');
+            $('#span2').removeClass('glyphicon-ok');
+            $('#span2').addClass('glyphicon-remove');
+            $('#btn_submit').attr('disabled', true);
+            valido=true;
+        }else{
+        	$('#span1').removeClass('glyphicon-warning-sign');
+        	$('#span1').removeClass('glyphicon-remove');
+        	$('#span2').removeClass('glyphicon-remove');
+        	$('#span1').addClass('glyphicon-ok');
+        	$('#span2').addClass('glyphicon-ok');
+            $('#btn_submit').attr('disabled', false);
+            
+            valido=true;
+        }
+    });//fin keyup repass
+});
+</script>

@@ -1,0 +1,16 @@
+<h2>Cambiar clave</h2>
+<?php
+$this->Html->addCrumb('Cambiar clave', '');
+
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Permiso', array('class'=>'form', 'inputDefaults'=>$defaults));
+
+$statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
+
+$nombre = AuthComponent::user('nombre')." ".AuthComponent::user('apellido');
+$usuario_id = AuthComponent::user('id');
+$centro_id = AuthComponent::user('centro_id');
+$cargo_id =  AuthComponent::user('cargo_id');
+$cargo =  AuthComponent::user('Cargo.name');
+$tipos_permiso = array('1'=>'Remunerado', 2=>'No Remunerado');
+?>

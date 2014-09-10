@@ -21,9 +21,18 @@ $('input[type=file]').change(function() {
     $('#file-info').text(file);
     
      reader.onload = function (e) {
-         $('#preview img').attr('src', e.target.result);
+         var resultado = e.target.result;
+         var hashes = resultado.split(';');
+         var tipo = hashes[0].split(':');
+         var mimeTipe = tipo[1].split('/');
+         if(mimeTipe[0] === 'image'){
+             $('#preview img').attr('src', e.target.result);
+         }else{
+             $('#preview img').attr('src', '/sgp/img/file.png');
+         }
+         
      }
-     
+     //reader.readAsArrayBuffer(this.files[0]);
      reader.readAsDataURL(this.files[0]);
 });
 });//]]>  

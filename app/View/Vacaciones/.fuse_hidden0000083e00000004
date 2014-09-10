@@ -1,0 +1,69 @@
+<h2>Solicitud de Vacaciones (Días disponibles)</h2>
+<hr/>
+<?php
+$this->Html->addCrumb('Vacaciones', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Días disponibles', '');
+
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Permiso', array('class'=>'form', 'inputDefaults'=>$defaults));
+
+$statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
+
+$nombre = AuthComponent::user('nombre')." ".AuthComponent::user('apellido');
+$usuario_id = AuthComponent::user('id');
+$centro_id = AuthComponent::user('centro_id');
+$cargo_id =  AuthComponent::user('cargo_id');
+$cargo =  AuthComponent::user('Cargo.name');
+$tipos_permiso = array('1'=>'Remunerado', 2=>'No Remunerado');
+
+$cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Días')
+?>
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoUsuarioId" class="col-sm-2 control-label">Trabajador Solicitante: </label>
+		<div class="col-sm-3">
+			<?= $this->Form->input('usuario', array('type'=>'text', 'class'=>'form-control', 'value'=>$nombre, 'readonly')) ?>
+			<?= $this->Form->input('usuario_id', array('type'=>'hidden', 'value'=>$usuario_id)) ?>
+		</div>
+		<label for="PermisoFechaSolicitud" class="col-sm-1 control-label">Fecha de Solicitud:</label>
+		<div class="col-sm-1">
+			<?= $this->Form->day('fecha_solicitud', array('required'=>true, 'class'=>'form-control', 'value'=>date('d'), 'disabled')); ?>
+		</div>
+		<div class="col-sm-1">
+			<?= $this->Form->month('fecha_solicitud', array('required'=>true, 'class'=>'form-control', 'value'=>date('m'), 'disabled', 'monthNames' => false)); ?>
+		</div>
+		<div class="col-sm-2">
+			<?= $this->Form->year('fecha_solicitud', date('Y')-2, date('Y')+2, array('required'=>true, 'value'=>date('Y'), 'disabled', 'class'=>'form-control')); ?>
+		</div>
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoFechaDesde" class="col-sm-2 control-label">Desde:</label>
+		<div class="col-sm-1">
+			<?= $this->Form->day('fecha_desde', array('required'=>true, 'class'=>'form-control')); ?>
+		</div>
+		<div class="col-sm-1">
+			<?= $this->Form->month('fecha_desde', array('required'=>true, 'class'=>'form-control', 'monthNames' => false)); ?>
+		</div>
+		<div class="col-sm-2">
+			<?= $this->Form->year('fecha_desde', date('Y')-2, date('Y')+2, array('required'=>true, 'class'=>'form-control')); ?>
+		</div>
+
+		<label for="PermisoFechaDesde" class="col-sm-2 control-label">Cantidad de día(s) a solicitar:</label>
+		<div class="col-sm-2">
+			<?= $this->Form->input('nro_dias', array('required'=>true, 'class'=>'form-control', 'options'=>$cant_dias, 'empty'=>'Seleccione...')); ?>
+		</div>
+
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Solicitar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
+</div>

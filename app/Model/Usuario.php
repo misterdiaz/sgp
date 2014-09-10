@@ -32,10 +32,26 @@ class Usuario extends AppModel {
 	);
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
+	public $hasOne = "DiasDisponibles";
+
 	public $belongsTo = array(
 		'Rol' => array(
 			'className' => 'Rol',
 			'foreignKey' => 'rol_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Cargo' => array(
+			'className' => 'Cargo',
+			'foreignKey' => 'cargo_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'Centro' => array(
+			'className' => 'Centro',
+			'foreignKey' => 'centro_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''

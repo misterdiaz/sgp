@@ -78,7 +78,8 @@ class HorasController extends AppController {
 			$this->Hora->create();
 			if ($this->Hora->save($this->request->data)) {
 				$this->Session->setFlash(__('Las horas de dedicación han sido registradas con exito'));
-				$this->redirect(array('action' => 'dedicacion'));
+				$this->request->data = array();
+				//$this->redirect(array('action' => 'dedicacion'));
 			} else {
 				$this->Session->setFlash(__('El registro no fue completado. Por favor, intente nuevamente.'));
 			}

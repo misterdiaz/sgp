@@ -1,0 +1,116 @@
+<?php
+ /*********************************************************************************
+*  República Bolivariana de Venezuela                     						  *
+*  Ministerio del Poder Popular de Ciencia y Tecnologia							  *
+*  Fundación Instituto de Ingenieria                                              *
+*  Centro de Procesamiento Digital de Imagenes - (CPDI)                           *
+*                                                                                 *
+*  Creado por: Ing. Luis Diaz - ldiazj@fii.gob.ve    			                  *
+*	                                                                              *
+**********************************************************************************/
+
+//pr($this->request);
+//pr(AuthComponent::user());
+if(AuthComponent::user('id')){
+	$user_id = AuthComponent::user('id');
+	$usuario = AuthComponent::user('login');
+	$cedula = AuthComponent::user('cedula');
+	$nombre = AuthComponent::user('nombre');
+	$apellido = AuthComponent::user('apellido');
+	$telefono = AuthComponent::user('telefono');
+	$profesion = AuthComponent::user('profesion');
+	$email = AuthComponent::user('email');
+	$email_secundario = AuthComponent::user('email_secundario');
+	$rol_name = AuthComponent::user('Rol.nombre');
+	$rol_des = AuthComponent::user('Rol.descripcion');
+?>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Datos del usuario</h3>
+  </div>
+  <div class="panel-body">
+	  <div class="col-md-3">
+	  	<div class='img-thumbnail'>
+	      <img src="img/profile.png" class='img-responsive'>
+	    </div>
+		
+	  </div>
+	  <div class="col-md-9">
+		  <ul class="list-group">
+			  <li class="list-group-item">
+			  	<strong>Nombre: </strong> <?= $nombre, " ", $apellido ?>
+			  </li>
+			  <li class="list-group-item">
+			  	<strong>Usuario:</strong> <?= $usuario ?> | <strong>Rol en el sistema:</strong> <?= $rol_name, " ( ", $rol_des," )" ?>
+			  </li>
+			  <li class="list-group-item">
+			  	<strong>Cédula: </strong> <?= $cedula ?>
+			  </li>
+			  <li class="list-group-item">
+			  	<strong>Teléfono: </strong> <?= $telefono ?>
+			  </li>
+			  <li class="list-group-item">
+			  	<strong>Email institucional: </strong><?= $email?> | <strong>Email personal:</strong> <?= $email_secundario ?>
+			  </li>
+			  <li class="list-group-item">
+			  	<strong>Profesión:</strong> <?= $profesion ?>
+			  </li>
+		  </ul>
+	  </div>
+  </div>
+  <div class="panel-footer">
+  	<div class="btn-group">
+		<?= $this->Html->link('Actualizar datos', array('controller'=>'Usuarios', 'action'=>'edit', $user_id,'admin'=>false), 
+			array('class'=>'btn btn-primary')) ?>
+		<?= $this->Html->link('Cambiar clave', array('controller'=>'Usuarios', 'action'=>'change_password', $user_id,'admin'=>false), 
+			array('class'=>'btn btn-default')) ?>
+	</div>
+  </div>
+</div>
+
+<div class="panel panel-danger">
+  <div class="panel-heading">
+    <h3 class="panel-title">Actividades por finalizar</h3>
+  </div>
+  <div class="panel-body">
+  </div>
+</div>
+
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Control de Permisos</h3>
+  </div>
+  <div class="panel-body">
+  </div>
+  <div class="panel-footer">
+  	<div class="btn-group">
+		<?= $this->Html->link('Solicitar permiso', array('controller'=>'Permisos', 'action'=>'add', $user_id,'admin'=>false), 
+		array('class'=>'btn btn-info')) ?>
+	</div>
+  </div>
+</div>
+
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <h3 class="panel-title">Control de Vacaciones</h3>
+  </div>
+  <div class="panel-body">
+  </div>
+  <div class="panel-footer">
+  	<div class="btn-group">
+		<?= $this->Html->link('Solicitar vacaciones', array('controller'=>'', 'action'=>'', $user_id,'admin'=>false), 
+		array('class'=>'btn btn-success')) ?>
+	</div>
+  </div>
+</div>
+
+<?php
+	}
+?>
+
+<script>
+$(document).ready(function() {
+	$("#liHome").addClass('active');
+});
+</script>
+<? echo $this->Js->writeBuffer(); ?>

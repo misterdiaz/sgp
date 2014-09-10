@@ -1,77 +1,54 @@
-<div class="horas form">
-<?php echo $this->Form->create('Hora'); ?>
-		<h2>Registro de Horas de dedicación.</h2>
-		<h2>Semana <?= $semana?></h2>
-	<? if(!empty($horas)): ?>
-	<h3>Horas registradas</h3>
-	<table>
-		<tr>
-			<th>Tipo de Actividad</th>
-			<th>Actividad</th>
-			<th>Cantidad (horas)</th>
-			<th>Observación</th>
-		</tr>
-	<? endif;?>
-	<?php
-		
-		//pr($horas);
-		foreach ($horas as $hora):
-			$tipoActividad = $hora['TipoActividad']['name'];
-			if(!empty($hora['Actividad']['nombre'])){
-				$actividadN = $hora['Actividad']['nombre'];
-			}else{
-				$actividadN = "N/A";
-			}
-			$cantidad = $hora['Hora']['cantidad'];
-			$observacion = $hora['Hora']['observacion'];
-	?>
-		<tr>
-			<td><?= $tipoActividad ?></td>
-			<td><?= $actividadN ?></td>
-			<td><?= $cantidad ?></td>
-			<td><?= $observacion ?></td>
-		</tr>
-	<?php
-		endforeach;
-		echo "</table>";
-		echo $this->Form->input('tipo_actividad_id', array(
-			'label'=>array('text'=>'Tipo de Actividad: ', 'class'=>'span-4 derecha'), 'empty'=>'Seleccione...', 'class'=>'span-6 last',
-			'div'=>array('class'=>'span-10'), 'required'=>true
-		));
-		echo $this->Form->input('actividad_id', array(
-			'label'=>array('text'=>'Actividad: ', 'class'=>'span-4 derecha'), 'empty'=>'Seleccione...', 'class'=>'span-6 last',
-			'div'=>array('class'=>'span-12 last', 'id'=>'actividad_div')
-		));
-		echo $this->Form->input('cantidad', array(
-			'label'=>array('text'=>'Cantidad de horas dedicadas: ', 'class'=>'span-4 derecha'), 'class'=>'span-2',
-			'div'=>array('class'=>'span-24 last'), 'required'=>true, 'type'=>'text'
-		));
-		echo $this->Form->input('semana', array('type'=>'hidden', 'value'=>$semana));
-		echo $this->Form->input('mes', array('type'=>'hidden', 'value'=>date('n')));
-		echo $this->Form->input('year', array('type'=>'hidden', 'value'=>date('Y')));
-		echo $this->Form->input('observacion', array(
-			'label'=>array('text'=>'Descripción /<br/>Observaciones: ', 'class'=>'span-4 derecha'), 'class'=>'span-10',
-			'div'=>array('class'=>'span-24 last'), 'required'=>true
-		));
-	?>
-	<div class="span-24 last">
-		<?php echo $this->Form->end('Guardar'); ?>
+<?php
+$this->Html->addCrumb('Regitro de horas', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Semana '.date('W'), '');
+echo $this->Form->create('Hora');
+$this->Form->inputDefaults(array('div'=>false, 'label'=>false), $merge = false);
+
+?>
+<h2>Registro de Horas de dedicación.</h2>
+<? if(!empty($horas)): ?>
+	<?= $this->Element('horas_registradas') ?>
+<? endif;?>
+
+<div class="row">
+	<div class="form-group">
+		<label for="HorasTipoActividadId" class="control-label">Tipo de Actividad: </label>
+		<?= $this->Form->input('tipo_actividad_id', array('required'=>true, 'empty'=>'Seleccione...', 'class'=>'form-control')); ?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
 
-		<li><?php echo $this->Html->link(__('List Horas'), array('action' => 'index')); ?></li>
-		<li><?php echo $this->Html->link(__('List Tipo Actividades'), array('controller' => 'tipo_actividades', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Tipo Actividad'), array('controller' => 'tipo_actividades', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Actividades'), array('controller' => 'actividades', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Actividad'), array('controller' => 'actividades', 'action' => 'add')); ?> </li>
-	</ul>
+<div class="row">
+	<div class="form-group" id='actividad_div'>
+		<label for="HorasActividadId" class="control-label">Actividad: </label>
+		<?= $this->Form->input('actividad_id', array('empty'=>'Seleccione...', 'class'=>'form-control')); ?>
+	</div>
 </div>
+
+<div class="row">
+	<div class="form-group">
+		<label for="HorasCantidad" class="control-label">Cantidad de horas dedicadas: </label>
+		<?= $this->Form->input('cantidad', array('required'=>true, 'class'=>'form-control')); ?>
+	</div>
+</div>
+
+<div class="row">
+	<div class="form-group">
+		<label for="HorasObservacion" class="control-label">Descripción /Observaciones: </label>
+		<?= $this->Form->input('observacion', array('required'=>true, 'class'=>'form-control')); ?>
+	</div>
+</div>
+<?
+	echo $this->Form->input('semana', array('type'=>'hidden', 'value'=>$semana));
+	echo $this->Form->input('mes', array('type'=>'hidden', 'value'=>date('n')));
+	echo $this->Form->input('year', array('type'=>'hidden', 'value'=>date('Y')));
+?>
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
+</div>
+
 <script>
 $(document).ready(function() {
-	$("#HoraAddForm").validate();
 	$("#actividad_div").hide();
 	$("#HoraTipoActividadId").on("click", function(){
 		valor = $(this).val();

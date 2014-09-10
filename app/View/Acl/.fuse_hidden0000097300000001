@@ -1,0 +1,19 @@
+<h2>Asignar permisos entre Grupos/Usuarios - Acciones</h2>
+<div>	
+	<br/>
+	<?
+		echo $this->Form->create();	
+		echo $this->Form->input('aro', array('options'=>$aros,'label'=>array('text'=>'Elegir el grupo:', 'class'=>'span-4 derecha'), 'empty'=>'Seleccione...', 'selected'=>'', 'class'=>'span-6 last', 'type'=>'select', 'div'=>array('class'=>'input select span-10') ));
+		echo $this->Js->submit("Continuar", array("id"=>'bt_sel', 'class'=>'btn btn-info', 'update'=>'#miembros', 'url'=>array('action'=>'aro_view_miembros')));
+		/*$this->Js->get('#btsel');
+		$this->Js->event('click', 
+		$this->Js->request(
+	        array('action' => 'aro_view_miembros'),
+	        array('async' => true, 'update' => '#miembros')
+	    )
+		);*/
+		
+	?>
+</div>
+<div id="miembros">
+</div>
