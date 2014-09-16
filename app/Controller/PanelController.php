@@ -59,7 +59,7 @@ class PanelController extends AppController
            //pr($solicitudes);
         }
         $imagen_perfil = $this->ImagenPerfil->field('imagen', array('usuario_id'=>$usuario_id));
-        if(empty($imagen_perfil)) $imagen_perfil = "sgp/img/profile.png";
+        if(empty($imagen_perfil)) $imagen_perfil = "./img/profile.png";
         $this->set(compact('actividades', 'permisos', 'periodos', 'imagen_perfil'));
     }
 	

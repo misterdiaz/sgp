@@ -17,7 +17,6 @@
       echo $this->Html->css(array(
         'bootstrap.min',
         'dashboard',
-        'carousel',
         'miestilo',
       ));
     ?>
@@ -36,16 +35,16 @@
   <style id="holderjs-style" type="text/css"></style>
  </head>
 
-  <body>
+<body>
 
-    <?= $this->Element('navigation') ?>
+<?= $this->Element('navigation') ?>
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3 col-md-2 sidebar">
+    <div class="col-sm-3 col-md-2">
       <?= $this->Element('mainmenu'); ?>
     </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="col-sm-9 col-md-10">
       <?= $this->Element('breadcrumb'); ?>
       <?php echo $content_for_layout; ?>
     </div>
