@@ -86,7 +86,7 @@ $cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Día
 	<div class="form-group form-horizontal">
 		<label for="PermisoTipoPermiso" class="col-sm-2 control-label">Tipo de Permiso: </label>
 		<div class="col-sm-2">
-			<?= $this->Form->input('tipo_permiso', array('required'=>true, 'default'=>1, 'options'=>$tipos_permiso)) ?>
+			<?= $this->Form->input('tipo_permiso', array('required'=>true, 'default'=>1, 'options'=>$tipos_permiso, 'disabled'=>true)) ?>
 		</div>
 	</div>
 </div>

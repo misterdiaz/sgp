@@ -1,78 +1,108 @@
-<div class="permisos view">
-<h2><?php  echo __('Permiso'); ?></h2>
-	<dl>
-		<dt><?php echo __('Id'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['id']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Nro'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['nro']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Usuario'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($permiso['Usuario']['id'], array('controller' => 'usuarios', 'action' => 'view', $permiso['Usuario']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fecha Solicitud'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['fecha_solicitud']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Centro'); ?></dt>
-		<dd>
-			<?php echo $this->Html->link($permiso['Centro']['name'], array('controller' => 'centros', 'action' => 'view', $permiso['Centro']['id'])); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fecha Desde'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['fecha_desde']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Fecha Hasta'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['fecha_hasta']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Tipo Permiso'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['tipo_permiso']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Nro Dias'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['nro_dias']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Causa'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['causa']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Created'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['created']); ?>
-			&nbsp;
-		</dd>
-		<dt><?php echo __('Modified'); ?></dt>
-		<dd>
-			<?php echo h($permiso['Permiso']['modified']); ?>
-			&nbsp;
-		</dd>
-	</dl>
+<h2>Solicitud de Concesión de Licencias o Permisos<br/>Remunerados o No Remunerados</h2>
+<hr/>
+<?php
+$this->Html->addCrumb('Permisos', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Ver', '');
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control', 'disabled'=>true);
+echo $this->Form->create('Permiso', array('class'=>'form', 'inputDefaults'=>$defaults));
+$this->request->data = $permiso;
+//pr($this->request->data);
+$statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
+$permiso_id = $permiso['Permiso']['id'];
+$nombre = AuthComponent::user('nombre')." ".AuthComponent::user('apellido');
+$usuario_id = AuthComponent::user('id');
+$centro_id = AuthComponent::user('centro_id');
+$cargo_id =  AuthComponent::user('cargo_id');
+$cargo =  AuthComponent::user('Cargo.name');
+$tipos_permiso = array('1'=>'Remunerado', 2=>'No Remunerado');
+
+$cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Días')
+?>
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoNro" class="col-sm-1 control-label">Número: </label>
+		<div class="col-sm-1">
+			<?= $this->Form->input('nro', array('class'=>'form-control')) ?>
+		</div>
+		<label for="PermisoUsuarioId" class="col-sm-2 control-label">Trabajador Solicitante: </label>
+		<div class="col-sm-3">
+			<?= $this->Form->input('usuario', array('type'=>'text', 'class'=>'form-control', 'value'=>$nombre, 'readonly')) ?>
+			<?= $this->Form->input('usuario_id', array('type'=>'hidden', 'value'=>$usuario_id)) ?>
+		</div>
+		<label for="PermisoFechaSolicitud" class="col-sm-1 control-label">Fecha de Solicitud:</label>
+		<div class="col-sm-1">
+			<?= $this->Form->day('fecha_solicitud', array('required'=>true, 'class'=>'form-control', 'default'=>date('d'), 'disabled'=>true)); ?>
+		</div>
+		<div class="col-sm-1">
+			<?= $this->Form->month('fecha_solicitud', array('required'=>true, 'class'=>'form-control', 'default'=>date('m'), 'disabled'=>true, 'monthNames' => false)); ?>
+		</div>
+		<div class="col-sm-2">
+			<?= $this->Form->year('fecha_solicitud', date('Y')-2, date('Y')+2, array('required'=>true, 'default'=>date('Y'), 'disabled'=>true, 'class'=>'form-control')); ?>
+		</div>
+	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('Edit Permiso'), array('action' => 'edit', $permiso['Permiso']['id'])); ?> </li>
-		<li><?php echo $this->Form->postLink(__('Delete Permiso'), array('action' => 'delete', $permiso['Permiso']['id']), null, __('Are you sure you want to delete # %s?', $permiso['Permiso']['id'])); ?> </li>
-		<li><?php echo $this->Html->link(__('List Permisos'), array('action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Permiso'), array('action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Usuarios'), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Centros'), array('controller' => 'centros', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Centro'), array('controller' => 'centros', 'action' => 'add')); ?> </li>
-	</ul>
+
+<div>&nbsp;</div>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoCentroId" class="col-sm-2 control-label">Unidad de Adscripción: </label>
+		<div class="col-sm-3">
+			<?= $this->Form->input('centro_id', array('disabled'=>true, 'class'=>'form-control', 'value'=>$centro_id)) ?>
+		</div>
+		<label for="PermisoCargoId" class="col-sm-2 control-label">Denominación del cargo: </label>
+		<div class="col-sm-5">
+			<?= $this->Form->input('cargo', array('type'=>'text', 'class'=>'form-control', 'value'=>$cargo, 'readonly')) ?>
+			<?= $this->Form->input('cargo_id', array('type'=>'hidden', 'class'=>'form-control', 'value'=>$cargo_id)) ?>
+		</div>
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoFechaDesde" class="col-sm-2 control-label">Desde:</label>
+		<div class="col-sm-1">
+			<?= $this->Form->day('fecha_desde', array('required'=>true, 'class'=>'form-control', 'disabled'=>true)); ?>
+		</div>
+		<div class="col-sm-1">
+			<?= $this->Form->month('fecha_desde', array('required'=>true, 'class'=>'form-control', 'monthNames' => false, 'disabled'=>true)); ?>
+		</div>
+		<div class="col-sm-2">
+			<?= $this->Form->year('fecha_desde', date('Y')-2, date('Y')+2, array('required'=>true, 'class'=>'form-control', 'disabled'=>true)); ?>
+		</div>
+
+		<label for="PermisoFechaDesde" class="col-sm-2 control-label">Cantidad de día(s) a solicitar:</label>
+		<div class="col-sm-2">
+			<?= $this->Form->input('nro_dias', array('required'=>true, 'class'=>'form-control', 'options'=>$cant_dias, 'empty'=>'Seleccione...')); ?>
+		</div>
+
+	</div>
+</div>
+
+<div>&nbsp;</div>
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoTipoPermiso" class="col-sm-2 control-label">Tipo de Permiso: </label>
+		<div class="col-sm-2">
+			<?= $this->Form->input('tipo_permiso', array('required'=>true, 'default'=>1, 'options'=>$tipos_permiso)) ?>
+		</div>
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="PermisoCausa" class="col-sm-2 control-label">Causa: </label>
+		<div class="col-sm-10">
+			<?= $this->Form->input('causa', array('required'=>true, 'class'=>'form-control')) ?>
+		</div>
+	</div>
+</div>
+<div>&nbsp;</div>
+<div class="btn-group">
+	<a href="<?= $this->Html->url(array('controller'=>'Permisos', 'action'=>'edit', $permiso_id)) ?>" class="btn btn-default">Editar</a>
+	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Regresar</a>
 </div>

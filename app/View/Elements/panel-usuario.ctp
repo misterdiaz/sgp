@@ -14,17 +14,18 @@ $rol_des = AuthComponent::user('Rol.descripcion');
 ?>
 <div class="panel panel-primary">
   <div class="panel-heading">
-    <h3 class="panel-title">Datos del usuario</h3>
+    <h3 class="panel-title">Perfil</h3>
   </div>
   <div class="panel-body">
 	  <div class="col-md-2">
 	  	<div class='img-thumbnail thumbnail' id='preview'>
-	      <img src="img/profile.png" class='img-responsive'>
+	      <img src="<?= $imagen_perfil ?>" class='img-responsive'>
 	      <a href="#" id="file-select" class="btn btn-default" style="display: none;">Cambiar imagen</a>
 	    </div>
 	    <?php
           echo $this->Form->create('Proyecto', array('enctype' => 'multipart/form-data', 'action'=>'addFile'));
           echo $this->Form->file('archivo', array('id'=>'file'));
+          echo $this->Form->end();
         ?>
 	  </div>
 	  <div class="col-md-10">

@@ -1,0 +1,96 @@
+<?php
+App::uses('Xtcpdf', 'Vendor/');
+
+$pdf = new Xtcpdf('P', 'mm', 'LETTER');
+
+$textfont = 'times'; // looks better, finer, and more condensed than 'dejavusans'
+
+$pdf->SetAuthor("FUNDACION INSTITUTO DE INGENIERIA - CPDI");
+$pdf->setPrintHeader(true);
+$pdf->setPrintFooter(true);
+
+    // set default header data
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, "FII", PDF_HEADER_STRING);
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+//set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+//set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+// Now you position and print your page content
+// example: 
+$pdf->SetTextColor(0, 0, 0);
+
+//pr($Permiso);
+$nro = $Permiso['Permiso']['nro'];
+$trabajador = $Permiso['Usuario']['fullname'];
+$fecha_solicitud = $Permiso['Permiso']['fecha_solicitud'];
+$unidad = $Permiso['Centro']['name'];
+$cargo = $Permiso['Cargo']['siglas'];
+$cedula = $Permiso['Usuario']['cedula'];
+$fecha_desde = $Permiso['Permiso']['fecha_desde'];
+$fecha_hasta = $Permiso['Permiso']['fecha_hasta'];
+$lapso = $fecha_desde." - ".$fecha_hasta;
+$tipo_permiso = $Permiso['Permiso']['tipo_permiso'];
+$dias = $Permiso['Permiso']['nro_dias'];
+$causa = $Permiso['Permiso']['causa'];
+
+$pdf->AddPage();
+$pdf->SetFont($textfont,'B',14);
+$pdf->MultiCell($w=0, $h=6, "Solicitud de Concesión de Licencias o Permisos", $border="", $align='C');
+$pdf->MultiCell($w=0, $h=6, "Remunerados o No Remunerados ", $border="", $align='C');
+$pdf->SetFont($textfont,'',12);
+$pdf->MultiCell($w=0, $h=8, "FORM. GDRR.HH 03/99", $border="", $align='C');
+$pdf->Ln();
+
+$pdf->SetFont($textfont,'B',11);
+
+$pdf->Cell($w=0, $h=14, "I- DATOS A SER LLENADOS POR EL SOLICITANTE", $border="TBLR", $ln=1, $align='C');
+
+//PRIMERA FILA:
+$pdf->SetFont($textfont,'B',11);
+$pdf->Cell($w=35, $h=6, "1- N°:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=95, $h=6, "2- Trabajador Solicitante:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=56, $h=6, "3- Fecha de Solicitud:", $border="TLR", $ln=1, $align='L');
+$pdf->SetFont($textfont,'',11);
+$pdf->Cell($w=35, $h=8, $nro, $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=95, $h=8, $trabajador, $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=56, $h=8, $fecha_solicitud, $border="BLR", $ln=1, $align='L');
+
+//SEGUNDA FILA:
+$pdf->SetFont($textfont,'B',11);
+$pdf->Cell($w=93, $h=6, "4- Unidad de Adscripción:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=93, $h=6, "5- Denominación del Cargo:", $border="TLR", $ln=1, $align='L');
+$pdf->SetFont($textfont,'',11);
+$pdf->Cell($w=93, $h=8, $unidad, $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=93, $h=8, $cargo, $border="BLR", $ln=1, $align='L');
+
+//TERCERA FILA
+$pdf->SetFont($textfont,'B',11);
+$pdf->Cell($w=46, $h=6, "6- Cédula de Identidad N°:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=46, $h=6, "7- Lapso Solicitado:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=6, "8- Permiso:", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=6, "9- N° Días Hábiles Solicitados:", $border="TLR", $ln=1, $align='L');
+$pdf->Cell($w=46, $h=6, "", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=46, $h=6, "", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=6, "", $border="TL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=6, "Solicitados:", $border="TLR", $ln=1, $align='L');
+$pdf->SetFont($textfont,'',11);
+$pdf->Cell($w=46, $h=8, $cedula, $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=46, $h=8, $lapso, $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=8, "", $border="BL", $ln=0, $align='L');
+$pdf->Cell($w=47, $h=8, $dias, $border="BLR", $ln=1, $align='L');
+
+
+
+echo $pdf->Output("permiso_".$trabajador.".pdf", 'FD');	
+?>

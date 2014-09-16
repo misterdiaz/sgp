@@ -104,6 +104,13 @@ class Permiso extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'Cargo' => array(
+			'className' => 'Cargo',
+			'foreignKey' => 'cargo_id',
+			'conditions' => 'Cargo.status = 1',
+			'fields' => 'name, siglas',
+			'order' => ''
 		)
 	);
 
@@ -134,6 +141,11 @@ class Permiso extends AppModel {
 		$this->id = $id;
 		$this->read(null, $id);
 		if($this->saveField('status', 3)) return true;
+		else return false;
+	}
+
+	public function delete($id = NULL, $cascade = true){
+		if($this->saveField('status', 4)) return true;
 		else return false;
 	}
 }

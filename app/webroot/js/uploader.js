@@ -21,12 +21,18 @@ $('input[type=file]').change(function() {
     $('#file-info').text(file);
     
      reader.onload = function (e) {
-         var resultado = e.target.result;
-         var hashes = resultado.split(';');
-         var tipo = hashes[0].split(':');
-         var mimeTipe = tipo[1].split('/');
+        var resultado = e.target.result;
+        var data = resultado.split(':');
+        var hashes = resultado.split(';');
+        var tipo = hashes[0].split(':');
+        var mimeTipe = tipo[1].split('/');
+        //console.log(resultado);
+        $.post( "Usuarios/cambiarImagen", {imagen: resultado}).
+        done(function(){
+            console.log("completado");
+        });
          if(mimeTipe[0] === 'image'){
-             $('#preview img').attr('src', e.target.result);
+             $('#preview img').attr('src', resultado);
          }else{
              $('#preview img').attr('src', '/sgp/img/file.png');
          }

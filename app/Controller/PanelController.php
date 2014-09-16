@@ -17,7 +17,7 @@ class PanelController extends AppController
 
     var $name = 'Panel';
     var $helpers = array ('Html', 'Form');
-    var $uses = array ('Actividad', 'Permiso', 'Periodo');
+    var $uses = array ('Actividad', 'Permiso', 'Periodo', 'ImagenPerfil');
     var $components = array ('RequestHandler', 'Auth');
 
 	function beforeFilter() {
@@ -46,7 +46,7 @@ class PanelController extends AppController
             'fields'=>'Permiso.id, fecha_solicitud, fecha_desde, fecha_hasta, status, nro_dias',
         ));
         $periodos = $this->Periodo->Find('all', array(
-                'conditions'=>array('usuario_id'=>$this->Auth->user('id')),
+                'conditions'=>array('usuario_id'=>$this->Auth->user('id'), 'disponible >'=>0),
                 'recursive'=>-1, 'order'=>'year ASC',
             ));
         if($rol_id == 2){
@@ -58,7 +58,9 @@ class PanelController extends AppController
            $this->set(compact('solicitudes'));
            //pr($solicitudes);
         }
-        $this->set(compact('actividades', 'permisos', 'periodos'));
+        $imagen_perfil = $this->ImagenPerfil->field('imagen', array('usuario_id'=>$usuario_id));
+        if(empty($imagen_perfil)) $imagen_perfil = "sgp/img/profile.png";
+        $this->set(compact('actividades', 'permisos', 'periodos', 'imagen_perfil'));
     }
 	
 	function admin_index(){

@@ -10,14 +10,6 @@ echo $this->Form->create('Vacacion', array('class'=>'form', 'inputDefaults'=>$de
 $statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
 $nombre = AuthComponent::user('nombre')." ".AuthComponent::user('apellido');
 $usuario_id = AuthComponent::user('id');
-$centro_id = AuthComponent::user('centro_id');
-$cargo_id =  AuthComponent::user('cargo_id');
-$cargo =  AuthComponent::user('Cargo.name');
-$dias_disponibles = AuthComponent::user('DiasDisponibles.nro_dias');
-$tipos_permiso = array('1'=>'Remunerado', 2=>'No Remunerado');
-
-$cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Días');
-
 //pr($periodos);
 ?>
 <div class="alert alert-warning alert-dismissible" role="alert">
@@ -82,7 +74,7 @@ $cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Día
 			<td class='text-center'><?= $disponible ?></td>
 			<td class='text-right'>
 				<?= $this->Form->input('nro_dias.'.$year, 
-					array('class'=>'form-control text-center dias', 'default'=>'0', 'type'=>'number'))?>
+					array('class'=>'form-control text-center dias', 'default'=>'0', 'min'=>0, 'max'=>$disponible, 'type'=>'number'))?>
 			</td>
 		</tr>
 	<?php
@@ -90,7 +82,7 @@ $cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Día
 	?>
 		<tr>
 			<td colspan="2" class='text-right'><strong>Total:</strong></td>
-			<td class='text-right'><div id='total'></div></td>
+			<td class='text-right'><div id='total'> 0 </div></td>
 		</tr>
 	</tbody>
 </table>

@@ -42,6 +42,15 @@
  */
 class EmailConfig {
 
+	public $mandrill = array(
+        'transport' => 'Mandrill.Mandrill',
+        'from' => 'from@example.com',
+        'fromName' => 'FromName',
+        'timeout' => 30,
+        'api_key' => 'YOUR_API_KEY',
+        'emailFormat' => 'both',
+    );
+
 	public $default = array(
 		'transport' => 'Mail',
 		'from' => 'you@localhost',

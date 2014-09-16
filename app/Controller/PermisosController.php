@@ -42,7 +42,9 @@ class PermisosController extends AppController {
 		if (!$this->Permiso->exists()) {
 			throw new NotFoundException(__('Invalid permiso'));
 		}
-		$this->set('permiso', $this->Permiso->read(null, $id));
+		$centros = $this->Permiso->Centro->find('list');
+		$permiso = $this->Permiso->read(null, $id);
+		$this->set(compact('permiso', 'centros'));
 	}
 
 /**
@@ -57,12 +59,14 @@ class PermisosController extends AppController {
 			$nro_dias = $this->request->data['Permiso']['nro_dias'];
 			//pr($this->request->data['Permiso']['fecha_desde']);
 			$fecha_desde = $this->request->data['Permiso']['fecha_desde']['year']."-".$this->request->data['Permiso']['fecha_desde']['month'].'-'.$this->request->data['Permiso']['fecha_desde']['day'];
-			$fecha_hasta = date_create($fecha_desde);
-			$fecha_hasta = date_add($fecha_hasta, date_interval_create_from_date_string($nro_dias.' days'));
+			$fecha_hasta = $this->_calcularFechaHasta($fecha_desde, $nro_dias);
 			//echo date_format($fecha_hasta, 'Y-m-d');exit;
-			$this->request->data['Permiso']['fecha_hasta'] = date_format($fecha_hasta, 'Y-m-d');
+			$this->request->data['Permiso']['fecha_hasta'] = $fecha_hasta;
 			if($nro_dias == 0) $this->request->data['Permiso']['nro_dias'] = '0.5';
 			if ($this->Permiso->save($this->request->data)) {
+				$datos['fecha_desde'] = $fecha_desde;
+				$datos['nro_dias'] = $nro_dias;
+				$this->_enviarCorreo(null, $this->Auth->user('email'), 'Solicitud de Permiso', 'permiso', 'html', $datos);
 				$this->Session->setFlash(__('El permiso ha sido solicitado.'));
 				$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));
 			} else {
@@ -72,6 +76,26 @@ class PermisosController extends AppController {
 		$usuarios = $this->Permiso->Usuario->find('list');
 		$centros = $this->Permiso->Centro->find('list');
 		$this->set(compact('usuarios', 'centros'));
+	}
+
+	public function _calcularFechaHasta($fecha_desde, $maxDias){
+		//Esta pequeña funcion me crea una fecha de entrega sin sabados ni domingos
+	    //Creamos un for desde 0 hasta maximo de dias
+	    $segundos = 0;
+	    $inicio = strtotime($fecha_desde);
+	    $fecha_hasta = $fecha_desde;
+	    for ($i=0; $i < $maxDias-1; $i++){
+			//Acumulamos la cantidad de segundos que tiene un dia en cada vuelta del for
+			$segundos += 86400;
+			//Obtenemos el dia de la fecha, aumentando el tiempo en N cantidad de dias, segun la vuelta en la que estemos
+			$caduca = date("D",$inicio+$segundos);
+			
+	        //Comparamos si estamos en sabado o domingo, si es asi restamos una vuelta al for, para brincarnos el o los dias...
+			if ($caduca == "Sat") $i--;
+			else if ($caduca == "Sun") $i--;
+			else $fecha_hasta = date("Y-m-d", $inicio + $segundos);//Si no es sabado o domingo, y el for termina y nos muestra la nueva fecha
+		}
+		return $fecha_hasta;
 	}
 
 /**
@@ -86,12 +110,21 @@ class PermisosController extends AppController {
 		if (!$this->Permiso->exists()) {
 			throw new NotFoundException(__('Invalid permiso'));
 		}
+
 		if ($this->request->is('post') || $this->request->is('put')) {
+			$nro_dias = $this->request->data['Permiso']['nro_dias'];
+			//pr($this->request->data['Permiso']['fecha_desde']);
+			$fecha_desde = $this->request->data['Permiso']['fecha_desde']['year']."-".$this->request->data['Permiso']['fecha_desde']['month'].'-'.$this->request->data['Permiso']['fecha_desde']['day'];
+			$fecha_hasta = date_create($fecha_desde);
+			$fecha_hasta = date_add($fecha_hasta, date_interval_create_from_date_string($nro_dias.' days'));
+			//echo date_format($fecha_hasta, 'Y-m-d');exit;
+			$this->request->data['Permiso']['fecha_hasta'] = date_format($fecha_hasta, 'Y-m-d');
+			if($nro_dias == 0) $this->request->data['Permiso']['nro_dias'] = '0.5';
 			if ($this->Permiso->save($this->request->data)) {
-				$this->Session->setFlash(__('The permiso has been saved'));
-				$this->redirect(array('action' => 'index'));
+				$this->Session->setFlash(__('La solicitud de permiso ha sido modificada.'));
+				$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
 			} else {
-				$this->Session->setFlash(__('The permiso could not be saved. Please, try again.'));
+				$this->Session->setFlash('La solicitud de permiso no fue modificada. Por favor, intente nuevamente.');
 			}
 		} else {
 			$this->request->data = $this->Permiso->read(null, $id);
@@ -120,9 +153,11 @@ class PermisosController extends AppController {
 		if ($this->Permiso->delete()) {
 			$this->Session->setFlash(__('Permiso eliminado con exito'));
 			$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));
+		}else{
+			$this->Session->setFlash(__('El Permiso no fue eliminado. Por favor intente nuevamente.'));
+			$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));	
 		}
-		$this->Session->setFlash(__('Permiso was not deleted'));
-		$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));
+		
 	}
 
 /**
@@ -247,6 +282,39 @@ class PermisosController extends AppController {
 		else $this->Session->setFlash('El permiso no fue denegado. Por favor, intente nuevamente');
 
 		$this->redirect(array('controller'=>'Panel', 'action' => 'index', 'admin'=>false));
+	}
+
+	public function generarPdf($id = null) {
+		if (!$this->request->is('post')) {
+			$this->Session->setFlash('Opción no permitida');
+		}
+		$this->Permiso->id = $id;
+		if (!$this->Permiso->exists()) throw new NotFoundException(__('Permiso Invalido'));
+
+		$this->set('Permiso', $this->Permiso->read(null, $id));
+		$this->layout = "pdf";
+	}
+
+	protected function _enviarCorreo($from=null, $to, $subject, $template, $emailType='html', $viewVars = null) {
+		if(is_null($from)) $from = array('CPDI', 'cpdi@fii.gob.ve');
+
+		$success = false;
+		array_push($this->destinatarios, $to);
+		try {
+			$email = new CakeEmail('mandrill');
+			$email->from($from[1], $from[0]);
+			$email->to($this->destinatarios);
+			$email->subject($subject);
+			$email->template($template);
+			$email->viewVars($viewVars);
+
+			$success = $email->send();
+			//print_r($success);exit;
+		} catch (SocketException $e) {
+			$this->log(sprintf('Error sending %s notification : %s', $emailType, $e->getMessage()));
+		}
+
+		return $success;
 	}
 
 }

@@ -1,0 +1,69 @@
+<h2>Actualizar días disponibles de Vacaciones</h2>
+<hr/>
+<?php
+$this->Html->addCrumb('Vacaciones', array('controller'=>'Proyectos', 'action'=>'index'));
+$this->Html->addCrumb('Actualizar días disponibles', '');
+
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Periodo', array('class'=>'form', 'inputDefaults'=>$defaults));
+
+$statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
+$nombre = AuthComponent::user('nombre')." ".AuthComponent::user('apellido');
+$usuario_id = AuthComponent::user('id');
+$centro_id = AuthComponent::user('centro_id');
+$cargo_id =  AuthComponent::user('cargo_id');
+$cargo =  AuthComponent::user('Cargo.name');
+$dias_disponibles = AuthComponent::user('DiasDisponibles.nro_dias');
+//pr($periodos);
+?>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="VacacionUsuarioId" class="col-sm-2 control-label">Trabajador: </label>
+		<div class="col-sm-3">
+			<?= $this->Form->input('usuario', array('type'=>'text', 'class'=>'form-control', 'value'=>$nombre, 'readonly')) ?>
+			<?= $this->Form->input('usuario_id', array('type'=>'hidden', 'value'=>$usuario_id)) ?>
+		</div>
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="VacacionFechaDesde" class="col-sm-2 control-label">Año:</label>
+		<div class="input-group col-sm-2">
+			<div class="input-group-addon"><?= date('Y')-1 ?></div>
+			<?= $this->Form->input('year', array('required'=>true, 'class'=>'form-control', 'value'=>date('Y'))); ?>
+		</div>
+		<label for="VacacionFechaDesde" class="col-sm-2 control-label">Cantidad de dias:</label>
+		<div class="col-sm-1">
+			<?= $this->Form->input('disponible', array('required'=>true, 'class'=>'form-control', )); ?>
+		</div>
+	</div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="btn-group">
+	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
+	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
+</div>
+<script>
+$(document).ready(function() {
+	
+	function updateSuma(){
+		$('.table').each(function(){
+		  var totalPoints = 0;
+		  $(this).find('input').each(function(){
+		    totalPoints += parseFloat($(this).val()); //<==== a catch  in here !! read below
+		  });
+		  $("#total").html( "<b>"+totalPoints+"</b>" );
+		});
+	};
+	$( ".dias" ).change(function() {
+		updateSuma();
+	});
+	
+});
+</script>

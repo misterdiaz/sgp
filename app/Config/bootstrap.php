@@ -182,3 +182,4 @@ CakeLog::config('error', array(
 	'file' => 'error',
 ));
 CakePlugin::load('AclExtras');
+CakePlugin::load('Mandrill');

@@ -2,7 +2,7 @@
 class UsuariosController extends AppController {
 
 	public $name = 'Usuarios';
-	public $uses = array('Usuario', 'Personal', 'Rol');
+	public $uses = array('Usuario', 'Personal', 'Rol', 'ImagenPerfil');
 	public $components= array('RequestHandler', 'Cookie', 'Auth');
 	
 	public $paginate = array(
@@ -13,7 +13,7 @@ class UsuariosController extends AppController {
 		parent::beforeFilter();
 		//$this->Auth->autoRedirect = false;
 		//$this->Auth->authorize = 'crud';
-		$this->Auth->allowedActions = array('login', 'logout', 'admin_login', 'admin_logout', 'change_password');//Descomentar esta linea para las acciones a las cuales queremos dar libre acceso. (Usar * para dar acceso a todas las acciones.)
+		$this->Auth->allowedActions = array('login', 'logout', 'admin_login', 'admin_logout', 'change_password', 'cambiarImagen');//Descomentar esta linea para las acciones a las cuales queremos dar libre acceso. (Usar * para dar acceso a todas las acciones.)
 	}
 
 	function admin_index() {
@@ -105,6 +105,25 @@ class UsuariosController extends AppController {
 		if (empty($this->data)) {
 			$this->request->data = $this->Usuario->read(null, $id);
 		}
+	}
+
+	public function cambiarImagen(){
+		$id = $this->Auth->user('id');
+		if (!$id && empty($this->request->data)) {
+			$this->Session->setFlash(__('Usuario Invalido', true));
+			$this->redirect(array('action' => 'index'));
+		}
+		$this->autoRender = false;
+		$this->ImagenPerfil->usuario_id = $id;
+		$this->request->data['usuario_id'] = $id;
+		if($this->ImagenPerfil->save($this->request->data)){
+			$this->response->statusCode(201);
+		}else{
+			$this->response->statusCode(501);
+
+		}
+		
+		
 	}
 
 	function admin_delete($id = null) {

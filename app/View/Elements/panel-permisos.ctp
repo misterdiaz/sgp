@@ -28,30 +28,32 @@ $rol_id = AuthComponent::user('Rol.id');
 			<td><?= $permiso['Permiso']['fecha_solicitud'] ?></td>
 			<td>Desde: <?= $permiso['Permiso']['fecha_desde'] ?> Hasta: <?= $permiso['Permiso']['fecha_hasta'] ?></td>
 			<td><?= $statusPermiso[$status] ?></td>
-			<td class='actions'>
-				<?= $this->Html->link('<span class="glyphicon glyphicon-eye-open"></span>', 
-				array('controller'=>'Permisos',  'action'=>'view', $permiso['Permiso']['id']), array("confirm"=>null, "indicator"=>null, "escape"=>false, 
-					"data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Ver información completa"
-				)); ?>
+			<td class='text-center col-sm-2'>
+				<div class="btn-group">
+			        <button type="button" class="btn btn-default">
+			        	<?= $this->Html->link('<span class="glyphicon glyphicon-eye-open"></span>', 
+						array('controller'=>'Permisos',  'action'=>'view', $permiso['Permiso']['id']), array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Ver información completa")); ?>
+					</button>
+			        <button type="button" class="btn btn-default <? if($status == 2 || $status == 3) echo 'disabled'?>">
+			        	<?= $this->Html->link('<span class="glyphicon glyphicon-edit"></span>',
+						array('controller'=>'Permisos', 'action'=>'edit', $permiso['Permiso']['id']), 
+						array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top",  "title"=>"Editar solicitud")); ?>
+			        </button>
+			        <button type="button" class="btn btn-default <? if($status == 1 || $status == 3) echo 'disabled'?>">
+			        	<?= $this->Form->postLink('<span class="glyphicon glyphicon-save"></span>',
+						array('controller'=>'Permisos', 'action'=>'generarPdf', $permiso['Permiso']['id']),
+						array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top",  "title"=>"Descargar solicitud")); ?>
+			        </button>
+			        <button type="button" class="btn btn-default <? if($status == 2 || $status == 3) echo 'disabled'?>">
+			        	<?= $this->Form->postLink('<span class="glyphicon glyphicon-trash"></span>',
+						array('controller'=>'Permisos', 'action'=>'delete', $permiso['Permiso']['id']), 
+						array("escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Eliminar solicitud" ), 'Estas seguro de eliminar' ); ?>
+			        </button>
+		    	</div>
 
 				<?php
-				if($status == 1){
-					echo $this->Html->link('<span class="glyphicon glyphicon-edit"></span>',
-						array('controller'=>'Permisos', 'action'=>'edit', $permiso['Permiso']['id']), 
-						array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", 
-							"title"=>"Editar solicitud" )); 
-
-					echo $this->Form->postLink('<span class="glyphicon glyphicon-trash"></span>',
-						array('controller'=>'Permisos', 'action'=>'delete', $permiso['Permiso']['id']), 
-						array("confirm"=>"Estas seguro de eliminar esta solicitud? ", "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", 
-							"data-placement"=>"top", "title"=>"Eliminar solicitud" ));
-
-				}else if($status == 2){
-					echo $this->Html->link('<span class="glyphicon glyphicon-save"></span>',
-						array('controller'=>'Permisos', 'action'=>'generarPdf', 1, $permiso['Permiso']['id']),
-						array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", 
-							"title"=>"Descargar solicitud")); 
-				}
+				if($status == 1) $solicitada = "disabled"; else $solicitada = "";
+				if($status == 2) $aprobada = "disabled"; else $aprobada = "";
 				?>
 				</td>
 		</tr>
@@ -65,7 +67,7 @@ endif;
 ?>
   <div class="panel-footer">
   	<div class="btn-group">
-		<?= $this->Html->link('Solicitar permiso', array('controller'=>'Permisos', 'action'=>'add', $user_id,'admin'=>false), 
+		<?= $this->Html->link('Solicitar permiso', array('controller'=>'Permisos', 'action'=>'add', 'admin'=>false), 
 		array('class'=>'btn btn-info')) ?>
 	</div>
   </div>

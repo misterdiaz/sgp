@@ -32,7 +32,7 @@ class Usuario extends AppModel {
 	);
 	//The Associations below have been created with all possible keys, those that are not needed can be removed
 
-	public $hasOne = "DiasDisponibles";
+	//public $hasOne = "DiasDisponibles";
 
 	public $belongsTo = array(
 		'Rol' => array(
@@ -60,8 +60,7 @@ class Usuario extends AppModel {
 	
 	
     public function beforeSave($options = array()) {
-        $this->data['Usuario']['clave'] = AuthComponent::password($this->data['Usuario']['clave']);
-		//echo $this->data['Usuario']['clave'];
+    	if(!empty($this->data['Usuario']['clave'])) $this->data['Usuario']['clave'] = AuthComponent::password($this->data['Usuario']['clave']);
         return true;
     }
 	

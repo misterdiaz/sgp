@@ -1,0 +1,7 @@
+<h2>Solicitud de Permiso</h2> 
+
+<p>El trabajador <?= AuthComponent::user('nombre') ?> <?= AuthComponent::user('apellido') ?>, ha solicitado un permiso remunerado de <?= $nro_dias ?> dia(s). Para aprobar/denegar esta solicitud debe dirigirse al <a href="http://sgp-fii.gob.ve/Panel">Panel del SGP</a>.
+
+<p>El presente correo confirma que la solicitud fue realizada con éxito y se encuentra registrada en el sistema.</p>
+
+<p><b><a href='http://sgp.fii.gob.ve'>Sistema de Gestión de Proyectos.</b></a></p>

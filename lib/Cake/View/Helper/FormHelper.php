@@ -1640,7 +1640,7 @@ class FormHelper extends AppHelper {
 		$out .= $this->Html->useTag('formend');
 
 		$url = '#';
-		$onClick = 'document.' . $formName . '.submit();';
+		 $onClick = 'document.' . $formName . '.submit();';
 		if ($confirmMessage) {
 			$confirmMessage = str_replace(array("'", '"'), array("\'", '\"'), $confirmMessage);
 			$options['onclick'] = "if (confirm('{$confirmMessage}')) { {$onClick} }";
