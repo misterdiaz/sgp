@@ -210,6 +210,7 @@ class AclController extends AppController
 		$aco_alias = $this->Aco->read('alias', $aco_id);
 		$aco = $aco_alias['Aco']['alias'];
 		$fk = $this->Aro->read('foreign_key', $aro_id);
+		//pr($this->request->data['Acl']['permisos']);exit;
 		//pr($fk);
 		$aro= array('model'=>'Rol', 'foreign_key'=>$fk['Aro']['foreign_key']);
 		$tipo = $this->request->data['Acl']['tipo'];
@@ -279,7 +280,7 @@ class AclController extends AppController
 				}else{
 					foreach($permisos as $key=>$value){
 						//echo "$key => $value";
-						$this->Acl->allow($aro, $aco, $key);
+						$this->Acl->allow($aro, $aco, $value);
 					}
 				}
 						
@@ -290,12 +291,13 @@ class AclController extends AppController
 				}else{
 					foreach($permisos as $key=>$value){
 						//echo "$key => $value";
-						$this->Acl->deny($aro, $aco, $key);
+						$this->Acl->deny($aro, $aco, $value);
 					}
 				}
 			break;
 				
 		}
+		//exit;
 		return true;
 	}
 	
