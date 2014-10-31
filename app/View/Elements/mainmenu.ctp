@@ -26,6 +26,7 @@ if (AuthComponent::user('id')):
             endif;
           ?>
             <li><?= $this->Html->link('Información', array('controller'=>'Proyectos', 'action'=>'index', 'admin'=>false), array('id'=>'lnk_proyectos')) ?></li>
+            
             <li><?= $this->Html->link('Reportes', array('controller'=>'Proyectos', 'action'=>'reportes', 'admin'=>false), array('id'=>'lnk_reportes')) ?></li>
           </ul>
         </li>
@@ -39,6 +40,14 @@ if (AuthComponent::user('id')):
           <a data-toggle="collapse" data-parent="#accordion" href="#ulHoras">Registro de Horas <b class="caret"></b></a>
           <ul id="ulHoras" class="ul-collapse collapse nav nav-stacked sub-nav">
             <li><?= $this->Html->link('Registro', array('controller'=>'Horas', 'action'=>'add', 'admin'=>false), array('id'=>'lnk_registro_horas')) ?></li>
+          </ul>
+        </li>
+        <li id="liPermisos">
+          <a data-toggle="collapse" data-parent="#accordion" href="#ulPermisos">Permisos<b class="caret"></b></a>
+          <ul id="ulPermisos" class="ul-collapse collapse nav nav-stacked sub-nav">
+            <li><?= $this->Html->link('Solicitar', array('controller'=>'Permisos', 'action'=>'add', 'admin'=>false), array('id'=>'lnk_registro_permisos')) ?>
+            <li><?= $this->Html->link('Histórico', array('controller'=>'Permisos', 'action'=>'index', 'admin'=>false), array('id'=>'lnk_historico_permisos')) ?></li>
+            <li><?= $this->Html->link('Reportes', array('controller'=>'Permisos', 'action'=>'reportes', 'admin'=>false), array('id'=>'lnk_reporte_permisos')) ?></li>
           </ul>
         </li>
         <li><?= $this->Html->link('Configuración', array('controller'=>'Panel', 'admin'=>true)) ?></li>

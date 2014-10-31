@@ -40,7 +40,7 @@ class PanelController extends AppController
 		$actividades = $this->Actividad->find('all', array(
             'conditions'=>$act_cond, 'recursive'=>-1
         ));
-        $per_cond = array('usuario_id'=>$usuario_id, 'status <'=>4);
+        $per_cond = array('usuario_id'=>$usuario_id, 'status <'=>4, 'Permiso.centro_id'=>$this->Auth->user('centro_id'));
         $permisos = $this->Permiso->find('all', array(
             'conditions'=>$per_cond, 'recursive'=>-1, 'order'=>'fecha_desde ASC',
             'fields'=>'Permiso.id, fecha_solicitud, fecha_desde, fecha_hasta, status, nro_dias',
@@ -50,11 +50,11 @@ class PanelController extends AppController
                 'recursive'=>-1, 'order'=>'year ASC',
             ));
         if($rol_id == 2){
-           $per_cond = array('status'=>1);
+           $per_cond = array('Permiso.status'=>1, 'Permiso.centro_id'=>$this->Auth->user('centro_id'));
            $solicitudes = $this->Permiso->find('all', array(
-                'conditions'=>$per_cond, 'recursive'=>-1, 'order'=>'fecha_desde ASC',
-                'fields'=>'Permiso.id, fecha_solicitud, fecha_desde, fecha_hasta, status, nro_dias',
-            )); 
+                'conditions'=>$per_cond, 'recursive'=>2, 'order'=>'Permiso.fecha_desde ASC',
+                'fields'=>'Permiso.id, Permiso.fecha_solicitud, Permiso.fecha_desde, Permiso.fecha_hasta, Permiso.status, Permiso.nro_dias, Permiso.usuario_id',
+            ));
            $this->set(compact('solicitudes'));
            //pr($solicitudes);
         }

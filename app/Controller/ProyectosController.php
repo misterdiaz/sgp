@@ -40,20 +40,24 @@ class ProyectosController extends AppController {
 		$this -> Proyecto -> recursive = 0;
 		$this -> Actividad -> recursive = 1;
 		$rol_id = $this -> Auth -> user('rol_id');
+		$centro_id = $this -> Auth -> user('centro_id');
 		switch ($rol_id) {
 			case 1 :
-				$this -> set('proyectos', $this -> paginate());
+				$this -> set('proyectos', $this -> paginate('Proyecto', array('Proyecto.centro_id'=>$centro_id)));
 				break;
 			case 2 :
-				$this -> set('proyectos', $this -> paginate());
+				$this -> set('proyectos', $this -> paginate('Proyecto', array('Proyecto.centro_id'=>$centro_id)));
 				break;
 
 			case 3 :
-				$this -> set('proyectos', $this -> paginate('Proyecto', array('Proyecto.coordinador_id' => $this -> Auth -> user('id'))));
+				$this -> set('proyectos', $this -> paginate('Proyecto', array(
+					'Proyecto.coordinador_id' => $this -> Auth -> user('id'),
+					'Proyecto.centro_id'=>$centro_id
+					)));
 				break;
 
 			default :
-				$this -> set('proyectos', $this -> paginate());
+				$this -> set('proyectos', $this -> paginate('Proyecto', array('Proyecto.centro_id'=>$centro_id)));
 				break;
 		}
 
@@ -103,7 +107,7 @@ class ProyectosController extends AppController {
 				$this -> Session -> setFlash(__('El proyecto no pudo ser guardado. Por favor, verifique los datos he intente nuevamente.'));
 			}
 		}
-		$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1))));
+		$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1, 'Usuario.centro_id'=>$this->Auth->user('centro_id')))));
 	}
 
 	/**
@@ -134,7 +138,7 @@ class ProyectosController extends AppController {
 			}
 		} else {
 			$this -> request -> data = $this -> Proyecto -> read(null, $id);
-			$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('status' => 1, 'rol_id !=' => 1))));
+			$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1, 'Usuario.centro_id'=>$this->Auth->user('centro_id')))));
 		}
 	}
 
@@ -278,7 +282,7 @@ class ProyectosController extends AppController {
 		if (!is_null($objetivo_id)) {
 			$objetivo = $this -> Proyecto -> Objetivo -> findById($objetivo_id);
 			$usuario_id = $objetivo['Proyecto']['coordinador_id'];
-			$usuario = $this -> Usuario -> Find('all', array('conditions' => array('Usuario.id' => $usuario_id), 'recursive' => -1));
+			$usuario = $this -> Usuario -> Find('all', array('conditions' => array('Usuario.id' => $usuario_id, 'Usuario.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => -1));
 			//pr($usuario);
 			$this -> set('fullname', $usuario[0]['Usuario']['fullname']);
 			$this -> set('proyecto', $objetivo['Proyecto']);
@@ -295,7 +299,7 @@ class ProyectosController extends AppController {
 	}
 
 	public function reporteResumen() {
-		$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array(), 'fields' => 'Proyecto.id, Proyecto.name', 'order' => 'Proyecto.name', 'recursive' => -1, ));
+		$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'fields' => 'Proyecto.id, Proyecto.name', 'order' => 'Proyecto.name', 'recursive' => -1, ));
 		$this -> set('proyectos', $Proyecto);
 
 	}
@@ -309,23 +313,23 @@ class ProyectosController extends AppController {
 		switch ($tipo) {
 			case 1 :
 				//Proyectos individuales
-				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.id' => $id), 'recursive' => 3, ));
+				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.id' => $id, 'Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => 3, ));
 				break;
 			case 2 :
 				//Todos los proyectos
-				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array(), 'recursive' => 3, ));
+				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => 3, ));
 				break;
 			case 3 :
 				//Solo activos
-				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.status' => 1), 'recursive' => 3, ));
+				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.status' => 1, 'Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => 3, ));
 				break;
 			case 4 :
 				//Solo culminados
-				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.status' => 3), 'recursive' => 3, ));
+				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.status' => 3, 'Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => 3, ));
 				break;
 
 			default :
-				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array(), 'recursive' => 3, ));
+				$Proyecto = $this -> Proyecto -> find('all', array('conditions' => array('Proyecto.centro_id'=>$this->Auth->user('centro_id')), 'recursive' => 3, ));
 				break;
 		}
 		if (empty($Proyecto)) {

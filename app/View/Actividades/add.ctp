@@ -29,7 +29,7 @@ $statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
 	 ?>
 	 </div>
 	 <div class="col-sm-1">
-	 	<a  href="#responsables" class='btn btn-default' data-toggle="modal" data-target="#responsables">
+	 	<a  href="#personal" class='btn btn-default' data-toggle="modal" data-target="#personal">
 	 		Buscar <span class="glyphicon glyphicon-search"></span>
 	 	</a>
 	 </div>
@@ -77,7 +77,30 @@ $statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
 	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
 	<a href="<?= $this->Html->url(array('controller'=>'Proyectos', 'action'=>'view', $proyecto_id)) ?>" class="btn btn-default">Cancelar</a>
 </div>
-
+<div class="modal fade" id="personal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Personal del CPDI</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="list-group">
+	        <?php
+			foreach ($personal as $row) {
+				//pr($row);
+				$fullname = $row['Usuario']['fullname'];
+				$personal_id = $row['Usuario']['id'];
+				echo "<a href='#divCoord'  class='list-group-item' id='$personal_id' valor='$fullname'>$fullname</a>";
+			} 
+			?>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
 $(document).ready(function() {
 	$(".list-group-item").on("click", function() {
@@ -85,7 +108,7 @@ $(document).ready(function() {
 		nombre = $(this).attr('valor');
 		$("#ActividadResponsableId").val(valor);
 		$("#ActividadResponsableName").val(nombre);
-		$('#responsables').modal('hide');
+		$('#personal').modal('hide');
 		//$.fancybox.close();
 	})
 });

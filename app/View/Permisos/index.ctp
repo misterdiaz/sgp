@@ -1,47 +1,63 @@
 <div class="permisos index">
 	<h2><?php echo __('Permisos'); ?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<tr>
+	<table class="table table-responsive table-bordered table-hover">
+	<thead>
+		<tr class="info">
 			<th><?php echo $this->Paginator->sort('id'); ?></th>
 			<th><?php echo $this->Paginator->sort('nro'); ?></th>
-			<th><?php echo $this->Paginator->sort('usuario_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('fecha_solicitud'); ?></th>
-			<th><?php echo $this->Paginator->sort('centro_id'); ?></th>
 			<th><?php echo $this->Paginator->sort('fecha_desde'); ?></th>
 			<th><?php echo $this->Paginator->sort('fecha_hasta'); ?></th>
-			<th><?php echo $this->Paginator->sort('tipo_permiso'); ?></th>
 			<th><?php echo $this->Paginator->sort('nro_dias'); ?></th>
-			<th><?php echo $this->Paginator->sort('causa'); ?></th>
-			<th><?php echo $this->Paginator->sort('created'); ?></th>
-			<th><?php echo $this->Paginator->sort('modified'); ?></th>
-			<th class="actions"><?php echo __('Actions'); ?></th>
-	</tr>
+			<th><?php echo $this->Paginator->sort('status'); ?></th>
+			<th class="actions">Acciones</th>
+		</tr>
+	</thead>
+	<tbody>
 	<?php
-	foreach ($permisos as $permiso): ?>
+	$statusPermiso = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
+	foreach ($permisos as $permiso): 
+		$status = $permiso['Permiso']['status'];
+	?>
 	<tr>
 		<td><?php echo h($permiso['Permiso']['id']); ?>&nbsp;</td>
 		<td><?php echo h($permiso['Permiso']['nro']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($permiso['Usuario']['id'], array('controller' => 'usuarios', 'action' => 'view', $permiso['Usuario']['id'])); ?>
-		</td>
 		<td><?php echo h($permiso['Permiso']['fecha_solicitud']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($permiso['Centro']['name'], array('controller' => 'centros', 'action' => 'view', $permiso['Centro']['id'])); ?>
-		</td>
 		<td><?php echo h($permiso['Permiso']['fecha_desde']); ?>&nbsp;</td>
 		<td><?php echo h($permiso['Permiso']['fecha_hasta']); ?>&nbsp;</td>
-		<td><?php echo h($permiso['Permiso']['tipo_permiso']); ?>&nbsp;</td>
 		<td><?php echo h($permiso['Permiso']['nro_dias']); ?>&nbsp;</td>
-		<td><?php echo h($permiso['Permiso']['causa']); ?>&nbsp;</td>
-		<td><?php echo h($permiso['Permiso']['created']); ?>&nbsp;</td>
-		<td><?php echo h($permiso['Permiso']['modified']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $permiso['Permiso']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $permiso['Permiso']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $permiso['Permiso']['id']), null, __('Are you sure you want to delete # %s?', $permiso['Permiso']['id'])); ?>
+		<td><?php echo $statusPermiso[$status]; ?>&nbsp;</td>
+		<td class='text-center col-sm-2'>
+			<div class="btn-group">
+		        <button type="button" class="btn btn-default">
+		        	<?= $this->Html->link('<span class="glyphicon glyphicon-eye-open"></span>', 
+					array('controller'=>'Permisos',  'action'=>'view', $permiso['Permiso']['id']), array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Ver información completa")); ?>
+				</button>
+		        <button type="button" class="btn btn-default <? if($status == 2 || $status == 3) echo 'disabled'?>">
+		        	<?= $this->Html->link('<span class="glyphicon glyphicon-edit"></span>',
+					array('controller'=>'Permisos', 'action'=>'edit', $permiso['Permiso']['id']), 
+					array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top",  "title"=>"Editar solicitud")); ?>
+		        </button>
+		        <button type="button" class="btn btn-default <? if($status == 1 || $status == 3) echo 'disabled'?>">
+		        	<?= $this->Form->postLink('<span class="glyphicon glyphicon-save"></span>',
+					array('controller'=>'Permisos', 'action'=>'generarPdf', $permiso['Permiso']['id']),
+					array("confirm"=>null, "indicator"=>null, "escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top",  "title"=>"Descargar solicitud")); ?>
+		        </button>
+		        <button type="button" class="btn btn-default <? if($status == 2 || $status == 3) echo 'disabled'?>">
+		        	<?= $this->Form->postLink('<span class="glyphicon glyphicon-trash"></span>',
+					array('controller'=>'Permisos', 'action'=>'delete', $permiso['Permiso']['id']), 
+					array("escape"=>false, "data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Eliminar solicitud" ), 'Estas seguro de eliminar' ); ?>
+		        </button>
+	    	</div>
+
+			<?php
+			if($status == 1) $solicitada = "disabled"; else $solicitada = "";
+			if($status == 2) $aprobada = "disabled"; else $aprobada = "";
+			?>
 		</td>
 	</tr>
 <?php endforeach; ?>
+	</tbody>
 	</table>
 	<p>
 	<?php
@@ -52,19 +68,16 @@
 
 	<div class="paging">
 	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
+		echo $this->Paginator->prev('< ' . __('previous '), array(), null, array('class' => 'prev disabled'));
 		echo $this->Paginator->numbers(array('separator' => ''));
 		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
 	?>
 	</div>
 </div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Permiso'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Usuarios'), array('controller' => 'usuarios', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Usuario'), array('controller' => 'usuarios', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Centros'), array('controller' => 'centros', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Centro'), array('controller' => 'centros', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+<script>
+$(document).ready(function() {
+	$("#liPermisos").addClass('active');
+	$("#ulPermisos").addClass('in');
+	$("#lnk_historico_permisos").addClass('current');  
+});
+</script>

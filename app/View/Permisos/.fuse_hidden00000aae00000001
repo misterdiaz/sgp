@@ -1,0 +1,21 @@
+<?php
+$this->Html->addCrumb('Permisos', array('controller'=>'Permisos', 'action'=>'index'));
+$this->Html->addCrumb('Reportes');
+?>
+<div class="page-header">
+	<h2>Reportes de proyectos</h2>
+</div>
+<div class="list-group col-md-6">
+	<?php
+		echo $this->Html->link('Por mes', array('controller'=>'Proyectos', 'action'=>'reporteResumen'), array('class'=>'list-group-item'));
+
+		echo $this->Html->link('Por Status del permiso', array('controller'=>'Proyectos', 'action'=>'reporteActividades'), array('class'=>'list-group-item'));
+	?>
+</div>
+<script>
+$(document).ready(function() {
+	$("#liPermisos").addClass('active');
+	$("#ulPermisos").addClass('in');
+	$("#lnk_reporte_permisos").addClass('current');  
+});
+</script>

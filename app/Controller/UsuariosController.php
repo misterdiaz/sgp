@@ -96,7 +96,7 @@ class UsuariosController extends AppController {
 		}
 		if (!empty($this->request->data)) {
 			if ($this->Usuario->save($this->request->data)) {
-				$this->Session->setFlash('Tu perfil ha sido actualizado');
+				$this->Session->setFlash('Tu perfil ha sido actualizado. Debes iniciar sesión de nuevo para ver los cambios en tu perfil.');
 				$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
 			} else {
 				$this->Session->setFlash('Tu perfil no fue actualizado. Por favor, intente nuevamente.');
@@ -105,6 +105,8 @@ class UsuariosController extends AppController {
 		if (empty($this->data)) {
 			$this->request->data = $this->Usuario->read(null, $id);
 		}
+		$cargos = $this->Usuario->Cargo->find('list');
+		$this->set(compact('cargos'));
 	}
 
 	public function cambiarImagen(){

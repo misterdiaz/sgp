@@ -11,6 +11,7 @@ $statusPermiso = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelad
   <table class='table table-responsive'>
   	<thead>
 	  	<tr>
+	  		<th>Trabajador</th>
 	  		<th>Fecha Solicitud</th>
 	  		<th>Periodo</th>
 	  		<th>Status</th>
@@ -21,14 +22,16 @@ $statusPermiso = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelad
 <?php
 	foreach( $solicitudes as $solicitud):
 		$status = $solicitud['Permiso']['status'];
+		$trabajador = $solicitud['Usuario']['fullname'];
 ?>
 		<tr>
+			<td><?= $trabajador ?></td>
 			<td><?= $solicitud['Permiso']['fecha_solicitud'] ?></td>
 			<td>Desde: <?= $solicitud['Permiso']['fecha_desde'] ?> Hasta: <?= $solicitud['Permiso']['fecha_hasta'] ?></td>
 			<td><?= $statusPermiso[$status] ?></td>
 			<td class='actions col-md-2 text-center'>
 				<?= $this->Html->link('<span class="glyphicon glyphicon-eye-open"></span>', 
-				array('controller'=>'solicitudes',  'action'=>'view', $solicitud['Permiso']['id']), array("confirm"=>null, "indicator"=>null, "escape"=>false, 
+				array('controller'=>'Permisos',  'action'=>'view', $solicitud['Permiso']['id']), array("confirm"=>null, "indicator"=>null, "escape"=>false, 
 					"data-toggle"=>"tooltip", "data-placement"=>"top", "title"=>"Ver información completa"
 				)); ?>
 

@@ -106,3 +106,10 @@ $cant_dias = array('0'=>'1/2 Dia', '1'=>'01 Dia', '2'=>'02 Días', '3'=>'03 Día
 	<?php echo $this->Form->end(array('label'=>'Solicitar', 'div'=>false, "class"=>"btn btn-default")); ?>
 	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>
 </div>
+<script>
+$(document).ready(function() {
+	$("#liPermisos").addClass('active');
+	$("#ulPermisos").addClass('in');
+	$("#lnk_registro_permisos").addClass('current');  
+});
+</script>

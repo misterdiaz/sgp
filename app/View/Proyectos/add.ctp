@@ -5,7 +5,7 @@ $this->Html->addCrumb('Agregar', '');
 
 $defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
 echo $this->Form->create('Proyecto', array('class'=>'form', 'inputDefaults'=>$defaults));
-
+$centro_id = AuthComponent::user('centro_id');
 $statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
 ?>
 <div class="form-group">
@@ -21,6 +21,7 @@ $statusOpc = array(1=>'Activo', 2=>'Inactivo', 3=>'Culminado', 4=>'Cancelado');
 <div class="form-group">
 	<label for="ProyectoCliente">Cliente: </label>
 	<?= $this->Form->input('cliente', array('required'=>true)) ?>
+	<?= $this->Form->input('centro_id', array('type'=>'hidden', 'value'=>$centro_id)) ?>
 </div>
 
 <div class="form-group form-horizontal">

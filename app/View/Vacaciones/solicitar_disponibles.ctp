@@ -74,7 +74,7 @@ $usuario_id = AuthComponent::user('id');
 			<td class='text-center'><?= $disponible ?></td>
 			<td class='text-right'>
 				<?= $this->Form->input('nro_dias.'.$year, 
-					array('class'=>'form-control text-center dias', 'default'=>'0', 'min'=>0, 'max'=>$disponible, 'type'=>'number'))?>
+					array('class'=>'form-control text-center dias', 'default'=>'0', 'min'=>0, 'max'=>$disponible, 'step'=>0.5, 'type'=>'number'))?>
 			</td>
 		</tr>
 	<?php

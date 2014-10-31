@@ -287,14 +287,16 @@ class VacacionesController extends AppController {
 			if($this->Periodo->existe($this->request->data)){
 				if($this->Periodo->update($this->request->data)){
 					$this->Session->setFlash('Dias disponibles registrados con exito');
-					$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
+					$this->request->data = array();
+					//$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
 				}else{
 					$this->Session->setFlash('Los Dias disponibles no fueron registrados. Por favor, intente nuevamente.1');
 				}
 			}else{
 				if($this->Periodo->save($this->request->data)){
 					$this->Session->setFlash('Dias disponibles registrados con exito');
-					$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
+					$this->request->data = array();
+					//$this->redirect(array('controller'=>'Panel', 'action' => 'index'));
 				}else{
 					$this->Session->setFlash('Los Dias disponibles no fueron registrados. Por favor, intente nuevamente.2');
 				}

@@ -42,7 +42,10 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3 col-md-2">
-      <?= $this->Element('mainmenu'); ?>
+    <?
+      if(AuthComponent::user('rol_id') == 1) echo $this->Element('adminmenu');
+      else echo $this->Element('mainmenu');
+    ?>
     </div>
     <div class="col-sm-9 col-md-10">
       <?= $this->Element('breadcrumb'); ?>

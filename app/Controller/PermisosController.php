@@ -7,6 +7,13 @@ App::uses('AppController', 'Controller');
  */
 class PermisosController extends AppController {
 
+	public $paginate = array(
+        'limit' => 25,
+        'order' => array(
+            'Permiso.fecha_desde' => 'asc'
+        )
+    );
+
 	function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->mapActions(
@@ -26,8 +33,9 @@ class PermisosController extends AppController {
  * @return void
  */
 	public function index() {
+		$user_id = $this->Auth->user('id');
 		$this->Permiso->recursive = 0;
-		$this->set('permisos', $this->paginate());
+		$this->set('permisos', $this->paginate('Permiso', array("usuario_id=$user_id")));
 	}
 
 /**
@@ -56,13 +64,14 @@ class PermisosController extends AppController {
 		if ($this->request->is('post')) {
 			$this->Permiso->create();
 			//pr($this->request->data);exit;
+			if($this->request->data['Permiso']['nro_dias'] == 0) $this->request->data['Permiso']['nro_dias'] = '0.5';
 			$nro_dias = $this->request->data['Permiso']['nro_dias'];
 			//pr($this->request->data['Permiso']['fecha_desde']);
 			$fecha_desde = $this->request->data['Permiso']['fecha_desde']['year']."-".$this->request->data['Permiso']['fecha_desde']['month'].'-'.$this->request->data['Permiso']['fecha_desde']['day'];
 			$fecha_hasta = $this->_calcularFechaHasta($fecha_desde, $nro_dias);
 			//echo date_format($fecha_hasta, 'Y-m-d');exit;
 			$this->request->data['Permiso']['fecha_hasta'] = $fecha_hasta;
-			if($nro_dias == 0) $this->request->data['Permiso']['nro_dias'] = '0.5';
+			$this->request->data['Permiso']['centro_id'] = $this->Auth->user('centro_id');
 			if ($this->Permiso->save($this->request->data)) {
 				$datos['fecha_desde'] = $fecha_desde;
 				$datos['nro_dias'] = $nro_dias;
@@ -316,5 +325,156 @@ class PermisosController extends AppController {
 
 		return $success;
 	}
+
+	public function reportes() {
+
+	}
+
+	public function reporteGeneral(){
+		if ($this->request->is('post')) {
+			//pr($this->request->data);exit;
+			$tipo = $this->request->data['Permiso']['tipo'];
+			$mes =  $this->request->data['Permiso']['mes'];
+			$trimestre =  $this->request->data['Permiso']['trimestre'];
+			$semestre =  $this->request->data['Permiso']['semestre'];
+			$year =  $this->request->data['Permiso']['year'];
+			$anio = date('Y'); //Por defecto trae el año actual
+			$status =   $this->request->data['Permiso']['status_id'];
+			$condiciones = array();
+			$meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Obtubre', 11 => 'Noviembre', 12 => 'Diciembre');
+			switch ($tipo) {
+				case 1 :
+					//Reporte mensual
+					$condiciones = array('MONTH(Permiso.fecha_desde)'=>$mes);
+					$titulo = "del Mes de ".$meses[$mes]."de $anio";
+					break;
+				case 2 :
+					//Reporte trimestral
+					switch ($trimestre){
+						case 1 :
+							$tri = array(1, 3);
+							$titulo = "del 1er Trimestre de $anio";
+							break;
+						case 2 :
+							$tri = array(4, 6);
+							$titulo = "del 2do Trimestre de $anio";
+							break;
+						case 3 :
+							$tri = array(7, 9);
+							$titulo = "del 3er Trimestre de $anio";
+							break;
+						case 4 :
+							$tri = array(10, 12);
+							$titulo = "del 4to Trimestre de $anio";
+							break;
+					}
+					$condiciones = array('MONTH(Permiso.fecha_desde) BETWEEN ? AND ?' => $tri);
+					break;
+				case 3 :
+					//Reporte semestral
+					switch ($semestre) {
+						case 1 :
+							$sem = array(1, 6);
+							$titulo = "del 1er Semestre de $anio";
+							break;
+						case 2 :
+							$sem = array(7, 12);
+							$titulo = "del 2do Semestre de $anio";
+							break;
+					}
+					$condiciones = array('MONTH(Permiso.fecha_desde) BETWEEN ? AND ?' => $sem);
+					break;
+				case 4 :
+					//Reporte anual
+					$condiciones = array('YEAR(Permiso.fecha_desde)'=>$year);
+					$titulo = "del Año $year";
+					break;
+
+				default :
+					$condiciones = array('YEAR(Permiso.fecha_desde)'=>$year);
+					break;
+			}
+			array_push($condiciones, array('Permiso.status'=>$status));
+
+			$Permisos = $this->Permiso->find('all', array('conditions'=>$condiciones));
+			//pr($Permisos);exit;
+			$this->set(compact('Permisos', 'status', 'titulo'));
+			//$this->layout = "pdf";
+			$this->render('pdf_reporte_general');
+		}
+	}
+
+	public function reporteGeneralPdf() {
+		if (!$this->request->is('post')) {
+			$this->Session->setFlash('Opción no permitida');
+		}else{
+			//pr($this->request->data);exit;
+			$tipo = $this->request->data['Permiso']['tipo'];
+			$mes =  $this->request->data['Permiso']['mes'];
+			$trimestre =  $this->request->data['Permiso']['trimestre'];
+			$semestre =  $this->request->data['Permiso']['semestre'];
+			$year =  $this->request->data['Permiso']['year'];
+			$anio = date('Y'); //Por defecto trae el año actual
+			$status =   $this->request->data['Permiso']['status_id'];
+			$condiciones = array();
+			switch ($tipo) {
+				case 1 :
+					//Reporte mensual
+					$condiciones = array('MONTH(Permiso.fecha_desde)'=>$mes);
+					break;
+				case 2 :
+					//Reporte trimestral
+					switch ($trimestre){
+						case 1 :
+							$tri = array(1, 3);
+							break;
+						case 2 :
+							$tri = array(4, 6);
+							break;
+						case 3 :
+							$tri = array(7, 9);
+							break;
+						case 4 :
+							$tri = array(10, 12);
+							break;
+					}
+					$condiciones = array('MONTH(Permiso.fecha_desde) BETWEEN ? AND ?' => $tri);
+					break;
+				case 3 :
+					//Reporte semestral
+					switch ($semestre) {
+						case 1 :
+							$sem = array(1, 6);
+							break;
+						case 2 :
+							$sem = array(7, 12);
+							break;
+					}
+					$condiciones = array('MONTH(Permiso.fecha_desde) BETWEEN ? AND ?' => $sem);
+					break;
+				case 4 :
+					//Reporte anual
+					$condiciones = array('YEAR(Permiso.fecha_desde)'=>$year);
+					break;
+
+				default :
+					$condiciones = array('YEAR(Permiso.fecha_desde)'=>$year);
+					break;
+			}
+			array_push($condiciones, array('Permiso.status'=>$status));
+
+			$Permisos = $this->Permiso->find('all', array('conditions'=>$condiciones));
+			//pr($Permisos);exit;
+			$this->set('permisos', $Permisos);
+			$this->layout = "pdf";
+		}
+		
+
+	}
+
+	public function reporteIndividual() {
+
+	}
+
 
 }

@@ -1,5 +1,6 @@
 <?php
 App::uses('AppModel', 'Model');
+App::uses('AuthComponent', 'Controller/Component');
 /**
  * Proyecto Model
  *
@@ -95,7 +96,7 @@ class Proyecto extends AppModel {
 		'Usuario' => array(
 			'className' => 'Usuario',
 			'foreignKey' => 'coordinador_id',
-			'conditions' => 'Usuario.status=1',
+			'conditions' => array('Usuario.status'=>1),
 			'fields' => 'id, fullname, email',
 			'order' => ''
 		)

@@ -66,6 +66,15 @@ echo $this->Form->input('id', array('type'=>'hidden'));
 	</div>
 </div>
 <div>&nbsp;</div>
+<div class="row">
+	<div class="form-group form-horizontal">
+		<label for="UsuarioCedula" class="col-sm-2 control-label">Cargo: </label>
+		<div class="col-sm-4">
+			<?= $this->Form->input('cargo_id', array('required'=>true, 'class'=>'form-control', 'empty'=>'Seleccione...')); ?>
+		</div>
+	</div>
+</div>
+<div>&nbsp;</div>
 <div class="btn-group">
 	<?php echo $this->Form->end(array('label'=>'Guardar', 'div'=>false, "class"=>"btn btn-default")); ?>
 	<a href="<?= $this->Html->url(array('controller'=>'Panel', 'action'=>'index')) ?>" class="btn btn-default">Cancelar</a>

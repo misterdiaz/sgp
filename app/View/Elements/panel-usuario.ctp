@@ -11,6 +11,7 @@ $email_secundario = AuthComponent::user('email_secundario');
 $rol_id = AuthComponent::user('Rol.id');
 $rol_name = AuthComponent::user('Rol.nombre');
 $rol_des = AuthComponent::user('Rol.descripcion');
+$cargo = AuthComponent::user('Cargo.siglas');
 ?>
 <div class="panel panel-primary">
   <div class="panel-heading">
@@ -46,7 +47,7 @@ $rol_des = AuthComponent::user('Rol.descripcion');
 			  	<strong>Email institucional: </strong><?= $email?> | <strong>Email personal:</strong> <?= $email_secundario ?>
 			  </li>
 			  <li class="list-group-item">
-			  	<strong>Profesión:</strong> <?= $profesion ?>
+			  	<strong>Profesión:</strong> <?= $profesion ?> | <strong>Cargo:</strong> <?= $cargo ?>
 			  </li>
 		  </ul>
 	  </div>
