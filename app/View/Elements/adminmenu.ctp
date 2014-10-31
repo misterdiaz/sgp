@@ -21,6 +21,7 @@ if (AuthComponent::user('id')):
             <li><?= $this->Html->link('Listado', array('controller'=>'Usuarios', 'action'=>'index', 'admin'=>true), array('id'=>'lnk_usuarios')) ?></li>
             
             <li><?= $this->Html->link('Agregar', array('controller'=>'Usuarios', 'action'=>'add', 'admin'=>true), array('id'=>'lnk_reportes')) ?></li>
+            <li><?= $this->Html->link('Permisos', array('controller'=>'Acl', 'action'=>'permisos', 'admin'=>true), array('id'=>'lnk_reportes')) ?></li>
           </ul>
         </li>
         <li id="liRoles">
