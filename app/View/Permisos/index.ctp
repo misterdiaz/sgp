@@ -1,5 +1,9 @@
+<?php
+$this->Html->addCrumb('Permisos', array('controller'=>'Permisos', 'action'=>'index'));
+$this->Html->addCrumb('Histórico');
+?>
 <div class="permisos index">
-	<h2><?php echo __('Permisos'); ?></h2>
+	<h2>Histórico de Permisos</h2>
 	<table class="table table-responsive table-bordered table-hover">
 	<thead>
 		<tr class="info">

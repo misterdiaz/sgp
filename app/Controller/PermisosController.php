@@ -467,7 +467,7 @@ class PermisosController extends AppController {
 
 			$Permisos = $this->Permiso->find('all', array('conditions'=>$condiciones));
 			//pr($Permisos);exit;
-			$this->set('permisos', $Permisos);
+			$this->set('Permisos', $Permisos);
 			$this->layout = "pdf";
 		}
 		
@@ -475,7 +475,20 @@ class PermisosController extends AppController {
 	}
 
 	public function reporteIndividual() {
+		if ($this->request->is('post')) {
+			$year =  $this->request->data['Permiso']['year'];
+			$usuario_id =  $this->request->data['Permiso']['coordinador_id'];
+			$anio = date('Y'); //Por defecto trae el año actual
+			$condiciones = array();
+			$condiciones = array('YEAR(Permiso.fecha_desde)'=>$year);
+			array_push($condiciones, array('Permiso.usuario_id'=>$usuario_id));
 
+			$Permisos = $this->Permiso->find('all', array('conditions'=>$condiciones, 'order'=>'Permiso.fecha_solicitud'));
+			//pr($Permisos);exit;
+			$this->request->data = array();
+			$this->set(compact('Permisos', 'year'));
+		}
+		$this -> Set('personal', $this -> Permiso -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1, 'Usuario.centro_id'=>$this->Auth->user('centro_id')))));
 	}
 
 

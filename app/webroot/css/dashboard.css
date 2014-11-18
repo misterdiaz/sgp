@@ -1,9 +1,7 @@
 /*
  * Base structure
- */
-
-
-/*
+ *
+ *
  * Global add-ons
  */
 
@@ -116,7 +114,7 @@ margin: 0 0 10px 0;
   background: #3b3b3b;
 }
 .current {
-background: url(../img/sidebar_active.png) no-repeat 100%;
+background: #555 url(../img/sidebar_active.png) no-repeat 100%;
 }
 
   /* make sidebar nav vertical */ 

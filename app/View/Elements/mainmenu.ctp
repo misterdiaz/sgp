@@ -50,6 +50,14 @@ if (AuthComponent::user('id')):
             <li><?= $this->Html->link('Reportes', array('controller'=>'Permisos', 'action'=>'reportes', 'admin'=>false), array('id'=>'lnk_reporte_permisos')) ?></li>
           </ul>
         </li>
+        <li id="liVacaciones">
+          <a data-toggle="collapse" data-parent="#accordion" href="#ulVacaciones">Vacaciones<b class="caret"></b></a>
+          <ul id="ulVacaciones" class="ul-collapse collapse nav nav-stacked sub-nav">
+            <li><?= $this->Html->link('Solicitar', array('controller'=>'Vacaciones', 'action'=>'solicitarDisponibles', 'admin'=>false), array('id'=>'lnk_registro_vacaciones')) ?>
+            <li><?= $this->Html->link('Histórico', array('controller'=>'Vacaciones', 'action'=>'index', 'admin'=>false), array('id'=>'lnk_historico_vacaciones')) ?></li>
+            <li><?= $this->Html->link('Reportes', array('controller'=>'Vacaciones', 'action'=>'reportes', 'admin'=>false), array('id'=>'lnk_reporte_vacaciones')) ?></li>
+          </ul>
+        </li>
         <li><?= $this->Html->link('Configuración', array('controller'=>'Panel', 'admin'=>true)) ?></li>
         <li><?= $this->Html->link('Cerrar Sesión', array('controller'=>'Usuarios', 'action'=>'logout', 'admin'=>false)) ?></li>
       </ul>

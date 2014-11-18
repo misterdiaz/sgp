@@ -16,32 +16,32 @@ $statusOpc = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Negado', 4=>'Cancelado');
 	<h2>Reporte General (todo el personal)</h2>
 </div>
 <div class="form-group">
-	<label for="ProyectoTipo">Tipo de reporte: </label>
+	<label for="PermisoTipo">Tipo de reporte: </label>
 	<?= $this->Form->input('tipo', array('empty'=>'Seleccione...', 'options'=>$tiposReporte, 'required'=>true)) ?>
 </div>
 
 <div class="form-group" id='div_mes'>
-	<label for="ProyectoMes">Mes: </label>
+	<label for="PermisoMes">Mes: </label>
 	<?= $this->Form->input('mes', array('empty'=>'Seleccione...', 'options'=>$meses,)) ?>
 </div>
 
 <div class="form-group" id='div_trimestre'>
-	<label for="ProyectoTrimestre">Trimestre: </label>
+	<label for="PermisoTrimestre">Trimestre: </label>
 	<?= $this->Form->input('trimestre', array('empty'=>'Seleccione...', 'options'=>$trimestre,)) ?>
 </div>
 
 <div class="form-group" id='div_semestre'>
-	<label for="ProyectoSemestre">Semestre: </label>
+	<label for="PermisoSemestre">Semestre: </label>
 	<?= $this->Form->input('semestre', array('empty'=>'Seleccione...', 'options'=>$semestre,)) ?>
 </div>
 
 <div class="form-group" id='div_year'>
-	<label for="ProyectoYear">Año: </label>
+	<label for="PermisoYear">Año: </label>
 	<?= $this->Form->input('year', array('placeHolder'=>'YYYY', 'default'=>date('Y'), 'type'=>'number')) ?>
 </div>
 
 <div class="form-group" id='div_status'>
-	<label for="ProyectoYear">Status: </label>
+	<label for="PermisoStatusId">Status: </label>
 	<?= $this->Form->input('status_id', array('empty'=>'Todos...', 'options'=>$statusOpc, 'default'=>2)) ?>
 </div>
 

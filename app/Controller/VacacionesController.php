@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  */
 class VacacionesController extends AppController {
 
-	public $uses = array('Vacacion', 'DiasDisponibles', 'Periodo');
+	public $uses = array('Vacacion', 'DiasDisponibles', 'Periodo', 'Usuario');
 
 	//public $destinatarios = array('oabarca@fii.gob.ve', 'aimarar@fii.gob.ve', 'olgam@fii.gob.ve');
 	public $destinatarios = array('aimarar@fii.gob.ve', 'olgam@fii.gob.ve');
@@ -30,8 +30,9 @@ class VacacionesController extends AppController {
  * @return void
  */
 	public function index() {
+		$user_id = $this->Auth->user('id');
 		$this->Vacacion->recursive = 0;
-		$this->set('vacaciones', $this->paginate());
+		$this->set('vacaciones', $this->paginate('Vacacion', array("usuario_id=$user_id")));
 	}
 
 /**
@@ -48,6 +49,8 @@ class VacacionesController extends AppController {
 		}
 		$this->set('vacacion', $this->Vacacion->read(null, $id));
 	}
+
+
 
 /**
  * add method
@@ -216,6 +219,45 @@ class VacacionesController extends AppController {
 		$this->redirect(array('action' => 'index'));
 	}
 
+	public function cancelar($id = null, $retorno = 'reporteGeneral') {
+		if (!$this->request->is('post')) {
+			throw new MethodNotAllowedException();
+		}
+		
+		$this->Vacacion->id = $id;
+		if (!$this->Vacacion->exists()) {
+			throw new NotFoundException(__('Codigo Invalido'));
+		}
+		$Vacacion = $this->Vacacion->read(null);
+		$this->Vacacion->status = 4;
+		$this->Vacacion->set('status', 4);
+		$nro_dias = $Vacacion['Vacacion']['nro_dias'];
+		$Periodo = $this->Periodo->find('first', array(
+			'conditions'=>array('Periodo.usuario_id'=>$Vacacion['Vacacion']['usuario_id']),
+			'fields'=>array('MAX(year) as year', 'disponible', 'Periodo.id'),
+			'group'=>array('year', 'disponible', 'Periodo.id')
+		));
+		//pr($Periodo);exit;
+		$year = $Periodo[0]['year'];
+		$disponible = $Periodo['Periodo']['disponible'];
+		$new_disponible = $disponible + $nro_dias;
+		$data = array();
+		$data['Periodo']['usuario_id'] = $Vacacion['Vacacion']['usuario_id'];
+		$data['Periodo']['year'] = $year;
+		$data['Periodo']['disponible'] = $new_disponible;
+		$data['Periodo']['id'] = $Periodo['Periodo']['id'];
+		if($this->Periodo->save($data)){
+			$this->Vacacion->save();
+			$this->Session->setFlash(__('La solicitud ha sido cancelada. Los dias han sido restituidos al trabajador.'));
+			$this->redirect(array('action' => $retorno));
+		}else{
+			$this->Session->setFlash(__('Vacación no cancelada. Por favor, intente nuevamente'));
+		}
+		
+		
+		
+	}
+
 	public function solicitarDisponibles() {
 		$periodos = $this->Periodo->Find('all', array(
 				'conditions'=>array('usuario_id'=>$this->Auth->user('id'), 'disponible >'=>0),
@@ -338,5 +380,99 @@ class VacacionesController extends AppController {
 		}
 
 		return $success;
+	}
+
+	public function reportes() {
+
+	}
+
+	public function reporteGeneral() {
+		if ($this->request->is('post')) {
+			//pr($this->request->data);exit;
+			$tipo = $this->request->data['Vacacion']['tipo'];
+			$mes =  $this->request->data['Vacacion']['mes'];
+			$trimestre =  $this->request->data['Vacacion']['trimestre'];
+			$semestre =  $this->request->data['Vacacion']['semestre'];
+			$year =  $this->request->data['Vacacion']['year'];
+			$anio = date('Y'); //Por defecto trae el año actual
+			$condiciones = array();
+			$meses = array(1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril', 5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto', 9 => 'Septiembre', 10 => 'Obtubre', 11 => 'Noviembre', 12 => 'Diciembre');
+			switch ($tipo) {
+				case 1 :
+					//Reporte mensual
+					$condiciones = array('MONTH(Vacacion.fecha_desde)'=>$mes);
+					$titulo = "del Mes de ".$meses[$mes]."de $anio";
+					break;
+				case 2 :
+					//Reporte trimestral
+					switch ($trimestre){
+						case 1 :
+							$tri = array(1, 3);
+							$titulo = "del 1er Trimestre de $anio";
+							break;
+						case 2 :
+							$tri = array(4, 6);
+							$titulo = "del 2do Trimestre de $anio";
+							break;
+						case 3 :
+							$tri = array(7, 9);
+							$titulo = "del 3er Trimestre de $anio";
+							break;
+						case 4 :
+							$tri = array(10, 12);
+							$titulo = "del 4to Trimestre de $anio";
+							break;
+					}
+					$condiciones = array('MONTH(Vacacion.fecha_desde) BETWEEN ? AND ?' => $tri);
+					break;
+				case 3 :
+					//Reporte semestral
+					switch ($semestre) {
+						case 1 :
+							$sem = array(1, 6);
+							$titulo = "del 1er Semestre de $anio";
+							break;
+						case 2 :
+							$sem = array(7, 12);
+							$titulo = "del 2do Semestre de $anio";
+							break;
+					}
+					$condiciones = array('MONTH(Vacacion.fecha_desde) BETWEEN ? AND ?' => $sem);
+					break;
+				case 4 :
+					//Reporte anual
+					$condiciones = array('YEAR(Vacacion.fecha_desde)'=>$year);
+					$titulo = "del Año $year";
+					break;
+
+				default :
+					$condiciones = array('YEAR(Vacacion.fecha_desde)'=>$year);
+					break;
+			}
+
+			$Vacaciones = $this->Vacacion->find('all', array('conditions'=>$condiciones));
+			//pr($Vacaciones);exit;
+			$this->set(compact('Vacaciones', 'titulo'));
+			//$this->layout = "pdf";
+			$this->render('pdf_reporte_general');
+		}
+	}
+
+	public function reporteIndividual() {
+		if ($this->request->is('post')) {
+			$year =  $this->request->data['Vacacion']['year'];
+			$usuario_id = $this->request->data['Vacacion']['coordinador_id'];
+			$anio = date('Y'); //Por defecto trae el año actual
+			$condiciones = array();
+			$condiciones = array('YEAR(Vacacion.fecha_desde)'=>$year);
+			array_push($condiciones, array('usuario_id'=>$usuario_id));
+			$titulo = "del Año $year";
+			$Vacaciones = $this->Vacacion->find('all', array('conditions'=>$condiciones));
+			//pr($Vacaciones);exit;
+			$this->request->data = array();
+			$this->set(compact('Vacaciones', 'titulo'));
+		}
+
+		$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1, 'Usuario.centro_id'=>$this->Auth->user('centro_id')))));
 	}
 }
