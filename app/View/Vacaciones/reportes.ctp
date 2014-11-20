@@ -10,6 +10,8 @@ $this->Html->addCrumb('Reportes');
 		echo $this->Html->link('General', array('controller'=>'Vacaciones', 'action'=>'reporteGeneral'), array('class'=>'list-group-item'));
 
 		echo $this->Html->link('Individual', array('controller'=>'Vacaciones', 'action'=>'reporteIndividual'), array('class'=>'list-group-item'));
+
+		echo $this->Html->link('Dias disponibles', array('controller'=>'Vacaciones', 'action'=>'reporteDiasDisponibles'), array('class'=>'list-group-item'));
 	?>
 </div>
 <script>

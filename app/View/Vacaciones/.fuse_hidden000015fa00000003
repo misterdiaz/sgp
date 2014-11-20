@@ -1,0 +1,32 @@
+<?php
+$this->Html->addCrumb('Vacaciones', array('controller'=>'Vacaciones', 'action'=>'index'));
+$this->Html->addCrumb('Reportes', array('controller'=>'Vacaciones', 'action'=>'reportes'));
+$this->Html->addCrumb('Reporte Dias Disponibles');
+
+$defaults = array('label'=>false, 'div'=>false, 'class'=>'form-control');
+echo $this->Form->create('Vacacion', array('class'=>'form', 'inputDefaults'=>$defaults));
+
+?>
+<h2>Dias Disponibles</h2>
+<table class="table table-responsive table-bordered table-hover">
+	<thead>
+		<tr class="info">
+			<th class="text-center">Nro</th>
+			<th class="text-center">Trabajador</th>
+			<th class="text-center">Dias disponibles</th>
+		</tr>
+	</thead>
+	<tbody>
+<?php
+	foreach ($dias_disponibles as $dias):
+?>
+	<tr>
+		<td class="text-center">Nro</td>
+		<td class="text-center">Trabajador</td>
+		<td class="text-center">Dias disponibles</td>
+	</tr>
+<?php
+	endforeach;
+?>
+	</tbody>
+</table>

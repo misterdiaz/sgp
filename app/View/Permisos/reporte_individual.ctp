@@ -62,7 +62,7 @@ echo $this->Form->create('Permiso', array('class'=>'form', 'inputDefaults'=>$def
 </div><!-- /.modal -->
 
 <?php
-if ($this->request->is('post') && !empty($Permisos)){
+if ($this->request->is('post') && !empty($Permisos)):
 	$estatus = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Denegado', 4=>'Cancelado');
 ?>
 <h2>Permisos Año: <?= $year ?></h2>
@@ -110,12 +110,13 @@ if ($this->request->is('post') && !empty($Permisos)){
 	</table>
 </div>
 <?php
-}else{
+endif;
+if ($this->request->is('post') && empty($Permisos)):
 ?>
 <div>&nbsp;</div>
 <div class="alert alert-warning" role="alert">La busqueda no arrojo resultados.</div>
 <?php
-}
+endif;
 ?>
 
 <script>

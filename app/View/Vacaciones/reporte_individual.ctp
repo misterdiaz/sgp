@@ -62,7 +62,7 @@ echo $this->Form->create('Vacacion', array('class'=>'form', 'inputDefaults'=>$de
 </div><!-- /.modal -->
 
 <?php
-if ($this->request->is('post') && !empty($Vacaciones)){
+if ($this->request->is('post') && !empty($Vacaciones)):
 	$estatus = array(1=>'Solicitado', 2=>'Aprobado', 3=>'Denegado', 4=>'Cancelado');
 ?>
 <h2>Vacaciones <?= $titulo ?></h2>
@@ -102,13 +102,15 @@ if ($this->request->is('post') && !empty($Vacaciones)){
 	<?php endforeach; ?>
 	</tbody>
 </table>
+<div class="alert alert-info" role="alert"><strong>Dias disponibles: </strong><?= $dias_disponibles['DiasDisponibles']['nro_dias'] ?></div>
 <?php
-}else{
+endif;
+if ($this->request->is('post') && empty($Vacaciones)):
 ?>
 <div>&nbsp;</div>
 <div class="alert alert-warning" role="alert">La busqueda no arrojo resultados.</div>
 <?php
-}
+endif;
 ?>
 
 <script>

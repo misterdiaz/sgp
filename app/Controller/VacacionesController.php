@@ -18,7 +18,7 @@ class VacacionesController extends AppController {
 			//'create' => array(),
 			//'read' => array(),
 			'update' => array('solicitarDisponibles'),
-			//'delete' => array()
+			'delete' => array('reportes')
 			)
 		);
 		$this->Auth->allowedActions = array('calcularFechaHasta');
@@ -468,11 +468,17 @@ class VacacionesController extends AppController {
 			array_push($condiciones, array('usuario_id'=>$usuario_id));
 			$titulo = "del Año $year";
 			$Vacaciones = $this->Vacacion->find('all', array('conditions'=>$condiciones));
+			$dias_disponibles = $this->DiasDisponibles->find('first', array('conditions'=>array('usuario_id'=>$usuario_id), 'recursive'=>0));
 			//pr($Vacaciones);exit;
 			$this->request->data = array();
-			$this->set(compact('Vacaciones', 'titulo'));
+			$this->set(compact('Vacaciones', 'titulo', 'dias_disponibles'));
 		}
 
 		$this -> Set('personal', $this -> Usuario -> find('all', array('fields' => 'id, fullname', 'order' => 'fullname', 'conditions' => array('Usuario.status' => 1, 'rol_id !=' => 1, 'Usuario.centro_id'=>$this->Auth->user('centro_id')))));
+	}
+
+	public function reporteDiasDisponibles() {
+		$dias_disponibles = $this->DiasDisponibles->find('all', array('conditions'=>array(), 'recursive'=>1));
+		$this->set(compact('dias_disponibles'));
 	}
 }
